@@ -2,7 +2,4 @@
 
 using namespace std;
 
-struct operand 
-{
 
-};
