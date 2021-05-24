@@ -13,6 +13,14 @@ constexpr auto mid (auto&& a) -> decltype (auto)
     return a / 2;
 }
 
+constexpr auto mid (auto&& a) -> decltype (auto)
+requires requires () {
+    {a.size ()};
+}
+{
+    return a.size () / 2;
+}
+
 static_assert (mid (2, 6) == 4, "");
 static_assert (mid (6) == 3, "");
 
