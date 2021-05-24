@@ -1,5 +1,6 @@
 #pragma once
 #include "common.hpp"
+#include <ph_color/color.hpp>
 using namespace std;
 
 
@@ -31,7 +32,7 @@ auto binary_search (auto const& A, auto const& key) -> bool
     while (low <= high)
     {
         auto mid = ph::mid (low, high);
-        cout << "low: " << low << endl << "high: " << high << endl << "mid: " << mid << ":" << A [mid] << endl;
+        cout << red << "low: " << low << endl << "high: " << high << endl << "mid: " << mid << ":" << A [mid] << endl;
        
         cout << vector <int> (A.begin () + low, A.begin () + high) << endl;
         if (A [mid] > key)
