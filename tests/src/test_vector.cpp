@@ -8,12 +8,51 @@
 
 
 
-using namespace std;
+//using namespace std;
+
 
 
 
 TEST_CASE ("test ph::vector")
 {
+    vector <int> i;
+//    std::cout << i.m_expensive_calls << std::endl;
+    i += 3;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    i += 4;
+    std::cout << i.m_pushed << std::endl;
+    std::cout << i.m_pushed << std::endl;
+//    std::cout <<
     
 }
 
