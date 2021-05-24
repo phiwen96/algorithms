@@ -1,40 +1,20 @@
 #pragma once
 #include "common.hpp"
-#include <ph_color/color.hpp>
 using namespace std;
 
-auto debug (auto const& A, auto const& low, auto const& mid, auto const& high)
-{
-    cout << low << " : " << mid << " : " << high << endl;
-    cout << ph::color::white;
-    
-    for (int i = 0; i < low; ++i)
-        cout << A [i] << " ";
-    
-    
-    
-    cout << ph::color::red << A [low] << " " << ph::color::white;
-    
-    for (auto i = A.begin () + low + 1; i < A.begin () + mid; ++i)
-        cout << *i << " ";
-    
-    cout << ph::color::green << A [mid] << " " << ph::color::white;
-    
-    for (auto i = mid + 1; i < high - 1; ++i)
-        cout << A [i] << " ";
-    
-    cout << ph::color::yellow << A [high] << " " << ph::color::white;
-    
-    for (auto i = high + 1; i < A.size (); ++i)
-        cout << A [i] << " ";
-    
-    
-    cout << endl;
-}
 
 
 /**
- @brief This algorithm returns true if it finds a specific key in an array, or false otherwise
+ compare algorithms when the input size increases
+ 
+ The algorithm with the slowest growth rate wins when the input size gets sufficiently large.
+ 
+ */
+
+
+/**
+ @brief     O ( n )
+            This algorithm returns true if it finds a specific key in an array, or false otherwise
  */
 auto linear_search (auto const& cont, auto const& key) -> bool
 {
@@ -50,9 +30,19 @@ auto linear_search (auto const& cont, auto const& key) -> bool
 
 
 /**
- @brief  @brief This algorithm returns true if it finds a specific key in an array, or false otherwise
+ @brief O ( log n )
+ 
+ 
+        This algorithm returns true if it finds a specific key in an array, or false otherwise
           The input container must be sorted.
+ 
+ Lets say it contains 64 elements. In the first iteration, we reject 32 elements, in the next iteration we reject 16 elements and so on
+until there are no more elements to compare of until we find the key.
+ 
+ For an input size of 64, there will be, at most, 7 loop iterations. If we double the size to 128, we only need one more loop iteration.
+ The growth rate is clearly not linear, its logarithic.
  */
+
 auto binary_search (auto const& A, auto const& key) -> bool
 {
     auto low = 0;
@@ -61,8 +51,7 @@ auto binary_search (auto const& A, auto const& key) -> bool
     while (low <= high)
     {
         auto mid = ph::mid (low, high);
-        debug (A, low, mid, high);
-       
+        
         if (A [mid] > key)
         {
             high = mid - 1;

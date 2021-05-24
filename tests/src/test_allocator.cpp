@@ -21,6 +21,55 @@ using namespace std;
 
 
 
+template <typename T>
+struct allo : T
+{
+    using value_type = typename T::value_type;
+    using pointer = typename T::pointer;
+    using reference = typename T::reference;
+    using dirrerence = typename T::difference;
+    
+    using T::m_begin;
+    using T::m_end;
+    using T::m_current;
+    using T::capacity;
+    using T::active;
+    
+
+    
+
+    
+    auto resize (auto&& n) -> auto&
+    {
+        if (n == capacity ()) return *this;
+        if (n < 0) throw;
+        
+        auto activee = active ();
+        
+        m_begin = (pointer) aligned_alloc (alignof (value_type), sizeof (value_type) * forward <decltype (n)> (n));
+        
+        
+        //    x x x x x 0 0 0
+        //    x x x 0 0 0 0 0
+        if (n <= activee)
+        {
+            m_current = m_begin + n;
+            
+        }
+        
+        //    x x x x 0 0 0 0
+        //    x x x x x x 0 0
+        else if (n > activee)
+        {
+            m_current = m_begin + activee;
+        }
+        
+        m_end = m_begin + n;
+        
+        return *this;
+    }
+};
+
 
 TEST_CASE ("sequence")
 {
