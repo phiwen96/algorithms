@@ -5,22 +5,18 @@
 #define GROW m_size *= growth_factor; grow();
 
 
-//template <typename T>
-//inline auto allocate_align_1 (size_t n) -> auto*
-//{
-//    return reinterpret_cast <T*> (::operator new (n * sizeof (T), std::align_val_t {alignof (T)}));
-//}
+
 
 template <typename T>
-inline auto allocate (size_t const number_of_elements) -> auto*
+[[nodiscard]] inline auto allocate (size_t const number_of_elements, size_t align = alignof (T)) -> auto*
 {
-    return reinterpret_cast <T*> (std::aligned_alloc (number_of_elements * sizeof (T), alignof (T)));
+    return reinterpret_cast <T*> (::operator new (number_of_elements * sizeof (T), static_cast <std::align_val_t> (align)));
 }
 
-template <typename T>
-inline auto allocate (size_t const number_of_elements, size_t const alignment) -> auto*
+
+inline auto deallocate (auto* p, size_t align = alignof (decltype (p))) -> void
 {
-    return reinterpret_cast <T*> (std::aligned_alloc (number_of_elements * sizeof (T), alignment));
+    ::operator delete (p, static_cast <std::align_val_t> (align));
 }
 
 

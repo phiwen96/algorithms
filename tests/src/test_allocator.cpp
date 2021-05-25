@@ -8,7 +8,9 @@
 #include <algorithms/allocator.hpp>
 #include <algorithms/timer.hpp>
 #include <algorithms/common.hpp>
-
+#include <cstdlib>
+#include <csetjmp>
+#include <algorithms/construct.hpp>
 
 
 //using namespace std;
@@ -40,29 +42,28 @@ cexp int elements = 10;
 //#undef SELF
 //}
 
-TEST_CASE ("malloc no align")
+struct A
 {
-    std::cout << sizeof (int) << std::endl;
+    A()
     {
-        timer t {"malloc no align"};
-        
-        LOOP (loops)
-        ({
-            auto* p = allocate <int> (elements, 8);
-
-        })
+        std::cout << "A()\n";
     }
-}
-TEST_CASE ("malloc no align2")
+    ~A()
+    {
+        std::cout << "~A()\n";
+    }
+};
+
+
+
+
+TEST_CASE("")
 {
-    timer t {"malloc no align"};
+    auto* p = allocate <A> (3);
     
-    int* p = allocate <int> (elements);
-
-    for (int i = 0; i < 3; ++i)
-    {
-        p [i] = 10;
-    }
+    
+    deallocate (p);
+    
 }
 
 
