@@ -1,6 +1,6 @@
 #pragma once
 
-using namespace std;
+//using namespace std;
 
 
 
@@ -27,7 +27,7 @@ struct sequence
         return m_end - m_begin;
     }
     
-    auto active () const noexcept-> difference
+    auto pushed () const noexcept-> difference
     {
         return m_current - m_begin;
     }
@@ -44,7 +44,7 @@ struct sequence
     
     auto operator= (auto&& other) noexcept
     {
-        m_current = forward <decltype (other)> (other);
+        m_current = std::forward <decltype (other)> (other);
     }
     
     auto operator+= (auto&& i) noexcept

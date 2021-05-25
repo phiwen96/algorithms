@@ -36,3 +36,84 @@ std::ostream& operator<< (std::ostream& os, std::vector <T> const& v)
         os << i << " ";
     return os;
 }
+
+
+
+template <typename T>
+struct analyzer
+{
+#define ANALYZER(value) analyzer <decltype (value)> {value, __builtin_FUNCTION (), __builtin_LINE()}
+    
+    T t;
+    char const* m_function_name;
+    int const m_line;
+    
+    
+    
+    auto operator== (auto&& o) const noexcept
+    {
+        return t == forward <decltype (o)> (o);
+    }
+    auto operator!= (auto const& o) const noexcept
+    {
+        return t != o;
+    }
+    auto operator= (auto&& o) noexcept -> auto&
+    {
+        t = forward <decltype (o)> (o);
+    }
+    auto operator++ () noexcept -> auto&
+    {
+        std::cout << "++" << std::endl;
+        ++t;
+        return *this;
+    }
+    auto operator++ (int) noexcept -> auto&
+    {
+        std::cout << "++" << std::endl;
+        t++;
+        return *this;
+    }
+    auto operator-- () noexcept -> auto&
+    {
+        --t;
+        return *this;
+    }
+    auto operator-- (int) noexcept -> auto&
+    {
+        t--;
+        return *this;
+    }
+    auto operator< (auto const& o) const noexcept
+    {
+        std::cout << "<" << std::endl;
+
+        return t < o;
+    }
+    auto operator> (auto const& o) const noexcept
+    {
+        return t > o;
+    }
+    friend auto operator<< (auto& os, analyzer const& a) noexcept -> auto&
+    {
+        return os << a.t;
+    }
+};
+
+template <typename T>
+analyzer (T) -> analyzer <T>;
+
+
+
+#define _LOOP(...) __VA_ARGS__ } ();
+
+//#define LOOP(n) []{for(auto _i_ = ANALYZER (n); _i_  < n; ++_i_) _LOOP
+
+#define LOO(...) __VA_ARGS__
+
+#define LOOP(n, ...) [__VA_ARGS__]{for(auto _i = 0; _i  < n; ++_i) _LOOP
+
+
+#ifndef cexp
+#define cexp inline static constexpr
+#endif
