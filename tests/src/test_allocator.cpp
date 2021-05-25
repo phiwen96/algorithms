@@ -48,6 +48,14 @@ struct A
     {
         std::cout << "A()\n";
     }
+    A(A const&)
+    {
+        std::cout << "A(A const&)\n";
+    }
+    A(A&&)
+    {
+        std::cout << "A(A&&)\n";
+    }
     ~A()
     {
         std::cout << "~A()\n";
@@ -59,11 +67,13 @@ struct A
 
 TEST_CASE("")
 {
+    A a;
+    std::cout << "==========" << std::endl;
     auto* p = allocate <A> (3);
-    
+    construct (p, a);
     
     deallocate (p);
-    
+    std::cout << "==========" << std::endl;
 }
 
 
