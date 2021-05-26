@@ -1,4 +1,5 @@
 #pragma once
+#include "pointee.hpp"
 
 template <typename...>
 struct array;
@@ -19,7 +20,14 @@ struct array <T, Size <U>>
 template <typename T>
 struct array <T>
 {
+    pointee <T> m_p;
     
+    auto operator+= (auto&& e) -> auto&
+    {
+        ++m_p;
+        m_p = forward <decltype (e)> (e);
+        return *this;
+    }
 };
 
 
