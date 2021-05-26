@@ -26,23 +26,27 @@
 
 TEST_CASE ("static array")
 {
-    SECTION ("default constructor")
+    SECTION ("construction")
     {
-        auto a = array <int, size <10>> {};
+        SECTION ("default")
+        {
+            auto a = array <int, size <10>> {};
+        }
+        
+        SECTION ("value")
+        {
+            auto a = array <int, size <10>> {1, 2, 3};
+        }
     }
-    
-    SECTION ("value constructor")
-    {
-        auto a = array <int, size <10>> {1, 2, 3};
-    }
-    
-//    kuk<int, size<10>>::type
-    
 }
 
 TEST_CASE ("dynamic array")
 {
-    auto a = array <int> {};
+    SECTION ("push back")
+    {
+        auto a = array <int> {};
+        REQUIRE ((size_t) a == 0);
+    }
 }
 
 #endif

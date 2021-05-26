@@ -120,9 +120,19 @@ struct pointee : sequence <T>, allocator <T>
         return *this;
     }
     
-    operator size_t () const
+    auto active () const -> size_t
     {
         return m_end - m_begin;
+    }
+    
+    auto capacity () const -> size_t
+    {
+        return m_end - m_begin;
+    }
+    
+    auto passive () const -> size_t
+    {
+        return m_end - m_current;
     }
     
     friend std::ostream& operator<< (std::ostream& os, pointee const& p)

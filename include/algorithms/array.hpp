@@ -28,6 +28,21 @@ struct array <T>
         m_p = forward <decltype (e)> (e);
         return *this;
     }
+
+    operator size_t () const
+    {
+        return static_cast <size_t> (m_p);
+    }
+    
+    auto begin () -> auto
+    {
+        return m_p.m_begin;
+    }
+    
+    auto end () -> auto
+    {
+        m_p.m_current;
+    }
 };
 
 
