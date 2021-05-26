@@ -12,7 +12,7 @@ struct sequence
     using reference = value_type&;
     using difference = ptrdiff_t;
     
-    sequence () noexcept : m_begin {nullptr}, m_end {nullptr}, m_current {nullptr}
+    sequence (pointer begin = nullptr, pointer end = nullptr, pointer current = nullptr) noexcept : m_begin {begin}, m_end {end}, m_current {current}
     {
         
     }
@@ -42,55 +42,55 @@ struct sequence
         return m_end;
     }
     
-    auto operator= (auto&& other) noexcept
-    {
-        m_current = std::forward <decltype (other)> (other);
-    }
+//    auto operator= (auto&& other) noexcept
+//    {
+//        m_current = std::forward <decltype (other)> (other);
+//    }
+//
+//    auto operator+= (auto&& i) noexcept
+//    {
+//        m_current += std::forward <decltype (i)> (i);
+//    }
+//
+//    auto operator-= (auto&& i) noexcept
+//    {
+//        m_current -= std::forward <decltype (i)> (i);
+//    }
+//
+//    auto operator*= (auto&& i) noexcept
+//    {
+//        m_current *= std::forward <decltype (i)> (i);
+//    }
+//
+//    auto operator/= (auto&& i) noexcept
+//    {
+//        m_current /= std::forward <decltype (i)> (i);
+//    }
+//
+//    auto operator--(auto&& i) noexcept -> sequence&
+//    {
+//        m_current -= std::forward <decltype (i)> (i);
+//    }
+//
+//    friend auto operator== (sequence const& me, auto&& i) noexcept -> bool
+//    {
+//        return me.m_current == std::forward <decltype (i)> (i);
+//    }
+//
+//    friend auto operator!= (sequence const& me, auto&& i) noexcept -> bool
+//    {
+//        return me.m_current != std::forward <decltype (i)> (i);
+//    }
+//
+//    friend auto operator+ (sequence& me, auto&& i) noexcept -> pointer
+//    {
+//        return me.m_current + i;
+//    }
     
-    auto operator+= (auto&& i) noexcept
-    {
-        m_current += std::forward <decltype (i)> (i);
-    }
-    
-    auto operator-= (auto&& i) noexcept
-    {
-        m_current -= std::forward <decltype (i)> (i);
-    }
-    
-    auto operator*= (auto&& i) noexcept
-    {
-        m_current *= std::forward <decltype (i)> (i);
-    }
-    
-    auto operator/= (auto&& i) noexcept
-    {
-        m_current /= std::forward <decltype (i)> (i);
-    }
-    
-    auto operator--(auto&& i) noexcept -> sequence&
-    {
-        m_current -= std::forward <decltype (i)> (i);
-    }
-    
-    friend auto operator== (sequence const& me, auto&& i) noexcept -> bool
-    {
-        return me.m_current == std::forward <decltype (i)> (i);
-    }
-    
-    friend auto operator!= (sequence const& me, auto&& i) noexcept -> bool
-    {
-        return me.m_current != std::forward <decltype (i)> (i);
-    }
-    
-    friend auto operator+ (sequence& me, auto&& i) noexcept -> pointer
-    {
-        return me.m_current + i;
-    }
-    
-    friend auto operator- (sequence& me, auto&& i) noexcept -> pointer
-    {
-        return me.m_current - i;
-    }
+//    friend auto operator- (sequence& me, auto&& i) noexcept -> pointer
+//    {
+//        return me.m_current - i;
+//    }
     
     operator bool () const noexcept
     {
