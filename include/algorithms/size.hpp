@@ -1,11 +1,17 @@
 #pragma once
 
-template <size_t...>
-struct size;
 
-template <size_t n>
-struct size <n>
+
+template <typename T>
+struct size
 {
-    using type = size_t;
-    inline static constexpr int value = n;
+//    using type = decltype (n);
+    
+//    inline static constexpr type value = n;
+    T t;
+    constexpr size (T t) : t {t} {}
 };
+
+
+//template <typename Size>
+//size (Size n) -> size <n>;

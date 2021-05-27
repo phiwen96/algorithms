@@ -13,17 +13,25 @@
 
 TEST_CASE ("")
 {
-    using allocator = allocator <pointee <int>>;
-    
-    auto p = pointee <int> {};
-    ++p.end;
-    allocator::allocate (p);
-    p.now = p.begin;
-    REQUIRE (p.active() == 0);
-    
-    
-    
-//    REQUIRE ()
+    GIVEN ("an allocator type")
+    {
+        using allocator = allocator <pointee <int>>;
+        
+        AND_GIVEN ("a pointee")
+        {
+            auto p = pointee <int> {};
+            
+            AND_GIVEN ("passive == 2")
+            {
+                p.end = p.begin + 2;
+                
+                WHEN ("allocating using this pointee")
+                {
+                    allocator::allocate (p);
+                }
+            }
+        }
+    }
 }
 
 

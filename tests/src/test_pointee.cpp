@@ -15,7 +15,21 @@ TEST_CASE ("active and passive")
 {
     GIVEN ("a pointee")
     {
-        auto p = pointee <int> {};
+        auto p = pointee <int> {2};
+        
+        THEN ("passive == 2")
+        {
+            REQUIRE (p.passive() == 2);
+        }
+        
+        THEN ("active == 0")
+        {
+            REQUIRE (p.active() == 0);
+        }
+    }
+    GIVEN ("a pointee")
+    {
+        auto p = pointee <int> {nullptr, nullptr};
         
         THEN ("passive () == 0")
         {
@@ -46,77 +60,8 @@ TEST_CASE ("active and passive")
                 REQUIRE (p.active() == 1);
             }
         }
-        
-    }
-    
-    
-//    REQUIRE (p.active() == 0);
-//
-//    ++p.now;
-//
-//    REQUIRE (p.active() == 1);
-    
-}
-
-TEST_CASE ("passive")
-{
-    
-}
-
-
-TEST_CASE ("dereference")
-{
-    INIT (a)
-    
-    REQUIRE (*p == 0);
-}
-
-TEST_CASE ("++")
-{
-    GIVEN ("a pointee")
-    {
-        auto p = pointee <int> {a, a + 10};
-        
-        AND_GIVEN ("now = begin")
-        {
-            p.now = p.begin;
-            
-            WHEN ("incremented")
-            {
-                ++p;
-                
-                THEN ("now = begin + 1")
-                {
-                    REQUIRE (p.now == p.begin + 1);
-                }
-            }
-        }
     }
 }
-
-TEST_CASE ("--")
-{
-    GIVEN ("a pointee")
-    {
-        auto p = pointee <int> {a, a + 10};
-        
-        AND_GIVEN ("now = begin + 1")
-        {
-            p.now = p.begin + 1;
-            
-            WHEN ("decremented")
-            {
-                --p;
-                
-                THEN ("now = begin")
-                {
-                    REQUIRE (p.now == p.begin);
-                }
-            }
-        }
-    }
-}
-
 
 
 

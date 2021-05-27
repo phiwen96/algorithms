@@ -32,12 +32,16 @@ struct allocator <Pointee>// : Pointee
     using reference = typename pointee::reference;
     using pointer = typename pointee::pointer;
     
-    
+    /**
+            1 1 1 0 0 0
+            1 1 1 1 0 0
+     */
     
     static auto allocate (pointee& p) -> void
     {
         assert (p.end != nullptr and p.begin != p.end);
-        auto size = p.end - p.begin;
+        
+        size_t size = p.end - p.begin;
         p.begin = reinterpret_cast <pointer> (std::malloc (sizeof (value_type) * size));
         p.end = p.begin + size;
     }
@@ -52,7 +56,7 @@ struct allocator <Pointee>// : Pointee
     
     static auto reallocate (pointee& p) -> void
     {
-        auto size = p.end - p.begin;
+        size_t size = p.end - p.begin;
         p.begin = reinterpret_cast <pointer> (std::realloc (p.begin, sizeof (value_type) * size));
         p.end = p.begin + size;
     }

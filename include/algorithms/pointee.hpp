@@ -20,8 +20,13 @@ struct pointee <T>
     pointer end {nullptr};
     pointer now {nullptr};
     
+    pointee (pointer begin, pointer end, pointer now);
+    pointee (pointer begin, pointer end);
+    pointee (size_t capacity);
+    
     auto active () const noexcept       -> size_t;
     auto passive () const noexcept      -> size_t;
+    auto capacity () const noexcept     -> size_t;
     
     auto operator* () noexcept          -> reference;
     
@@ -32,6 +37,7 @@ struct pointee <T>
     auto operator++ (int) noexcept      -> auto&;
     auto operator-- () noexcept         -> auto&;
     auto operator-- (int) noexcept      -> auto&;
+    auto operator*= (size_t growth_factor) noexcept   -> auto&;
     
     friend std::ostream& operator<< (std::ostream& os, pointee const& p);
 };
@@ -44,10 +50,41 @@ struct pointee <T>
 
 
 
+template <typename T>
+auto pointee <T>::active () const noexcept -> size_t
+{
+    return now - begin;
+}
 
+template <typename T>
+auto pointee <T>::passive () const noexcept -> size_t
+{
+    return static_cast <size_t> (end - now);
+}
 
+template <typename T>
+auto pointee <T>::capacity () const noexcept -> size_t
+{
+    return active() + passive();
+}
 
+template <typename T>
+pointee <T>::pointee (pointer begin, pointer end, pointer now) : begin {begin}, end {end}, now {now}
+{
 
+}
+
+template <typename T>
+pointee <T>::pointee (pointer begin, pointer end) : begin {begin}, end {end}, now {this->begin}
+{
+
+}
+
+template <typename T>
+pointee <T>::pointee (size_t cap) : begin {nullptr}, end {begin + cap}, now {begin}
+{
+    
+}
 
 template <typename T>
 auto pointee <T>::operator* () noexcept -> reference
@@ -104,15 +141,10 @@ auto pointee <T>::operator-= (auto n) noexcept -> auto&
 }
 
 template <typename T>
-auto pointee <T>::active () const noexcept -> size_t
+auto pointee <T>::operator*= (size_t growth_factor) noexcept -> auto&
 {
-    return now - begin;
-}
-
-template <typename T>
-auto pointee <T>::passive () const noexcept -> size_t
-{
-    return end - now;
+    end = begin + (capacity() * growth_factor);
+    return *this;
 }
 
 
