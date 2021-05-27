@@ -19,44 +19,41 @@
 
 
 
+template <typename...>
+struct allocator;
 
 
 
-
-template <typename T>
-struct allocator
+template <typename Pointee>
+struct allocator <Pointee>// : Pointee
 {
-    using value_type = T;
-    using pointer = value_type*;
+    using pointee = Pointee;
+    using value_type = typename pointee::value_type;
+    using reference = typename pointee::reference;
+    using pointer = typename pointee::pointer;
     
-
-    allocator ()
+    
+    
+    static auto allocate (pointee& p) -> void
     {
-        std::cout << "allocator" << std::endl;
+        assert (p.end != nullptr and p.begin != p.end);
+        auto size = p.end - p.begin;
+        p.begin = reinterpret_cast <pointer> (std::malloc (sizeof (value_type) * size));
+        p.end = p.begin + size;
     }
     
-    static auto allocate (pointer& begin, pointer& end)
+    static auto deallocate (pointee& p) -> void
     {
-        auto size = end - begin;
-        begin = reinterpret_cast <pointer> (std::malloc (sizeof (value_type) * (end - begin)));
-        end = begin + size;
+        std::free (p.begin);
+        p.begin = nullptr;
+        p.end = nullptr;
+        p.now = p.begin;
     }
     
-    static auto deallocate (pointer& begin, pointer& end)
+    static auto reallocate (pointee& p) -> void
     {
-        std::free (begin);
-        begin = nullptr;
-        end = nullptr;
+        auto size = p.end - p.begin;
+        p.begin = reinterpret_cast <pointer> (std::realloc (p.begin, sizeof (value_type) * size));
+        p.end = p.begin + size;
     }
-    
-    static auto reallocate (pointer& begin, pointer& end)
-    {
-        auto size = end - begin;
-        begin = reinterpret_cast <pointer> (std::realloc (begin, sizeof (value_type) * size));
-        end = begin + size;
-    }
-    
-
-
-    
 };

@@ -23,6 +23,7 @@ TEST_CASE ("++")
     INIT (a)
     
     ++p;
+    REQUIRE (*p.now == 1);
     REQUIRE (*p == 1);
     
     p++;

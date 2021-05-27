@@ -106,7 +106,7 @@ auto pointee <T>::operator-= (auto n) noexcept -> auto&
 template <typename T>
 auto pointee <T>::active () const noexcept -> size_t
 {
-    return end - begin;
+    return now - begin;
 }
 
 template <typename T>
