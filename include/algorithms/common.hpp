@@ -117,3 +117,9 @@ analyzer (T) -> analyzer <T>;
 #ifndef cexp
 #define cexp inline static constexpr
 #endif
+
+
+#define FULL (active() + 1 >= passive())
+
+
+

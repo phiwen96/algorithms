@@ -56,6 +56,7 @@ struct allocator <Pointee>// : Pointee
     
     static auto reallocate (pointee& p) -> void
     {
+//        size_t act = p.active ();
         size_t size = p.end - p.begin;
         p.begin = reinterpret_cast <pointer> (std::realloc (p.begin, sizeof (value_type) * size));
         p.end = p.begin + size;
