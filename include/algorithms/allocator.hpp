@@ -30,7 +30,10 @@ struct allocator
     using pointer = value_type*;
     
 
-    
+    allocator ()
+    {
+        std::cout << "allocator" << std::endl;
+    }
     
     static auto allocate (pointer& begin, pointer& end)
     {

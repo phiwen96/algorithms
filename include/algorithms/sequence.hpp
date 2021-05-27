@@ -1,105 +1,79 @@
 #pragma once
-
+#include "common.hpp"
 //using namespace std;
+
+
+/**
+ sequence has three pointers
+ */
+template <typename...>
+struct sequence;
 
 
 
 template <typename T>
-struct sequence
+struct sequence <T>
 {
     using value_type = T;
     using pointer = value_type*;
     using reference = value_type&;
     using difference = ptrdiff_t;
     
-    sequence (pointer begin = nullptr, pointer end = nullptr, pointer current = nullptr) noexcept : m_begin {begin}, m_end {end}, m_current {current}
+    constexpr sequence (pointer begin = nullptr, pointer end = nullptr, pointer current = nullptr) noexcept : m_begin {begin}, m_end {end}, m_current {current}
     {
-        
+
     }
-    
-    auto operator* () noexcept -> reference
-    {
-        return m_current;
-    }
-    
-    auto capacity () const noexcept -> difference
-    {
-        return m_end - m_begin;
-    }
-    
-    auto pushed () const noexcept-> difference
+    constexpr auto active () const noexcept-> difference
     {
         return m_current - m_begin;
     }
     
-    auto begin () noexcept -> auto&
+    constexpr auto passive () const noexcept-> difference
     {
-        return m_begin;
+        return m_end - m_current;
     }
     
-    auto end () noexcept -> auto&
-    {
-        return m_end;
-    }
-    
-//    auto operator= (auto&& other) noexcept
-//    {
-//        m_current = std::forward <decltype (other)> (other);
-//    }
-//
-//    auto operator+= (auto&& i) noexcept
-//    {
-//        m_current += std::forward <decltype (i)> (i);
-//    }
-//
-//    auto operator-= (auto&& i) noexcept
-//    {
-//        m_current -= std::forward <decltype (i)> (i);
-//    }
-//
-//    auto operator*= (auto&& i) noexcept
-//    {
-//        m_current *= std::forward <decltype (i)> (i);
-//    }
-//
-//    auto operator/= (auto&& i) noexcept
-//    {
-//        m_current /= std::forward <decltype (i)> (i);
-//    }
-//
-//    auto operator--(auto&& i) noexcept -> sequence&
-//    {
-//        m_current -= std::forward <decltype (i)> (i);
-//    }
-//
-//    friend auto operator== (sequence const& me, auto&& i) noexcept -> bool
-//    {
-//        return me.m_current == std::forward <decltype (i)> (i);
-//    }
-//
-//    friend auto operator!= (sequence const& me, auto&& i) noexcept -> bool
-//    {
-//        return me.m_current != std::forward <decltype (i)> (i);
-//    }
-//
-//    friend auto operator+ (sequence& me, auto&& i) noexcept -> pointer
-//    {
-//        return me.m_current + i;
-//    }
-    
-//    friend auto operator- (sequence& me, auto&& i) noexcept -> pointer
-//    {
-//        return me.m_current - i;
-//    }
-    
-    operator bool () const noexcept
-    {
-        return m_current == nullptr or m_current == m_end;
-    }
     
     
 protected:
     pointer m_begin;
     pointer m_end;
     pointer m_current;
+};
+
+template <typename T, template <size_t...> typename Size, size_t N>
+struct sequence <T, Size <N>>
+{
+    using value_type = T;
+    using pointer = value_type*;
+    using reference = value_type&;
+    using difference = ptrdiff_t;
+    
+//    constexpr sequence (pointer begin, pointer end) noexcept //: m_begin {begin}, m_end {end}
+//    {}
+    
+//    constexpr sequence () noexcept : m_values {}, m_begin {nullptr}, m_end {nullptr}, m_current {nullptr}//m_begin {m_values}, m_end {m_values + N}, m_current {m_values}
+//    {
+//
+//    }
+//    constexpr auto active () const noexcept-> difference
+//    {
+//        return m_current - m_begin;
+//    }
+//
+//    constexpr auto passive () const noexcept-> difference
+//    {
+//        return m_end - m_current;
+//    }
+
+    
+    
+//private:
+//    value_type m_values [N];
+    
+    
+//protected:
+    cexp pointer m_begin;// {m_values};
+    T * const m_end;// {m_values + N};
+//    pointer m_current;// {m_values};
 };

@@ -1,27 +1,31 @@
 #pragma once
 #include "pointee.hpp"
+#include "sequence.hpp"
+
 
 template <typename...>
 struct array;
 
-struct sta; struct dyn;
 
-template <typename T, template <size_t...> typename Size, size_t U>
-struct array <T, Size <U>>
+template <typename T, template <size_t...> typename Size, size_t N>
+struct array <T, Size <N>>
 {
-    using type = T;
-    type m_begin [U];
+    
+    
+  
+private:
+    pointee <T, Size <N>> m_p;
 };
 
 
 
 
 
+
+
 template <typename T>
-struct array <T>
+struct array <T> : sequence <T>
 {
-    pointee <T> m_p;
-    
     auto operator+= (auto&& e) -> auto&
     {
         ++m_p;
@@ -31,7 +35,7 @@ struct array <T>
 
     operator size_t () const
     {
-        return static_cast <size_t> (m_p);
+        return m_p.active ();
     }
     
     auto begin () -> auto
@@ -43,6 +47,10 @@ struct array <T>
     {
         m_p.m_current;
     }
+    
+private:
+    pointee <T> m_p;
+    
 };
 
 
