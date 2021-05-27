@@ -15,7 +15,7 @@ struct pointee <T>
     using pointer = value_type*;
     using reference = value_type&;
     using difference = ptrdiff_t;
-
+    
     pointer begin {nullptr};
     pointer end {nullptr};
     pointer now {nullptr};
