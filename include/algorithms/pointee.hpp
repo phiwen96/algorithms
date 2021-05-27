@@ -16,9 +16,9 @@ struct pointee <T>
     using reference = value_type&;
     using difference = ptrdiff_t;
 
-    pointer begin;
-    pointer end;
-    pointer now;
+    pointer begin {nullptr};
+    pointer end {nullptr};
+    pointer now {nullptr};
     
     auto active () const noexcept       -> size_t;
     auto passive () const noexcept      -> size_t;

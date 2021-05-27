@@ -11,6 +11,59 @@ int a [10] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto p = pointee <int> {a, a + 10, now};
 
 
+TEST_CASE ("active and passive")
+{
+    GIVEN ("a pointee")
+    {
+        auto p = pointee <int> {};
+        
+        THEN ("passive () == 0")
+        {
+            REQUIRE (p.passive() == 0);
+        }
+        
+        THEN ("active () == 0")
+        {
+            REQUIRE (p.active() == 0);
+        }
+        
+        AND_GIVEN ("end == begin + 2")
+        {
+            p.end = p.begin + 2;
+            
+            THEN ("passive () == 2")
+            {
+                REQUIRE (p.passive() == 2);
+            }
+        }
+        
+        AND_GIVEN ("now == begin + 1")
+        {
+            p.now = p.begin + 1;
+            
+            THEN ("active () == 1")
+            {
+                REQUIRE (p.active() == 1);
+            }
+        }
+        
+    }
+    
+    
+//    REQUIRE (p.active() == 0);
+//
+//    ++p.now;
+//
+//    REQUIRE (p.active() == 1);
+    
+}
+
+TEST_CASE ("passive")
+{
+    
+}
+
+
 TEST_CASE ("dereference")
 {
     INIT (a)
@@ -20,42 +73,52 @@ TEST_CASE ("dereference")
 
 TEST_CASE ("++")
 {
-    INIT (a)
-    
-    ++p;
-    REQUIRE (*p.now == 1);
-    REQUIRE (*p == 1);
-    
-    p++;
-    REQUIRE (*p == 2);
+    GIVEN ("a pointee")
+    {
+        auto p = pointee <int> {a, a + 10};
+        
+        AND_GIVEN ("now = begin")
+        {
+            p.now = p.begin;
+            
+            WHEN ("incremented")
+            {
+                ++p;
+                
+                THEN ("now = begin + 1")
+                {
+                    REQUIRE (p.now == p.begin + 1);
+                }
+            }
+        }
+    }
 }
 
 TEST_CASE ("--")
 {
-    INIT (a + 2)
-    
-    --p;
-    REQUIRE (*p == 1);
-    
-    p--;
-    REQUIRE (*p == 0);
+    GIVEN ("a pointee")
+    {
+        auto p = pointee <int> {a, a + 10};
+        
+        AND_GIVEN ("now = begin + 1")
+        {
+            p.now = p.begin + 1;
+            
+            WHEN ("decremented")
+            {
+                --p;
+                
+                THEN ("now = begin")
+                {
+                    REQUIRE (p.now == p.begin);
+                }
+            }
+        }
+    }
 }
 
-TEST_CASE ("+=")
-{
-    INIT (a)
-    
-    p += 2;
-    REQUIRE (*p == 2);
-}
 
-TEST_CASE ("-=")
-{
-    INIT (a + 2)
-    
-    p -= 2;
-    REQUIRE (*p == 0);
-}
+
 
 
 #endif
