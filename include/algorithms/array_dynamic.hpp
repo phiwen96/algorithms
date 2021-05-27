@@ -2,21 +2,21 @@
 
 #include "array_.hpp"
 #include "common.hpp"
+#include "allocator.hpp"
+#include "pointee.hpp"
+//template <typename T>
+//concept is_ok = requires (Pointee& p) {
+//    typename Pointee::value_type;
+//    typename Pointee::reference;
+//    typename Pointee::pointer;
+//};
 
-template <typename Pointee, template <typename...> typename Allocator>
-concept is_ok = requires (Pointee& p) {
-    typename Pointee::value_type;
-    typename Pointee::reference;
-    typename Pointee::pointer;
-};
-
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-struct array <Allocator <Pointee>>
+template <typename T>
+struct array <T>
 {
     cexp int growth_factor = 2;
-    using pointee = Pointee;
-    using allocator = Allocator <pointee>;
+    using pointee = pointee <T>;
+    using allocator = allocator <pointee>;
     using value_type = typename pointee::value_type;
     using reference = typename pointee::reference;
     using pointer = typename pointee::pointer;
@@ -27,11 +27,13 @@ struct array <Allocator <Pointee>>
     auto passive () const -> size_t;
     auto active () const -> size_t;
     auto capacity () const -> size_t;
-    auto begin ()   -> auto;
-    auto end ()     -> auto;
+    auto begin ()   -> pointer;
+    auto end ()     -> pointer;
     
     auto operator[] (size_t i) -> reference;
     auto operator[] (size_t i) const -> reference;
+    
+
 
 private:
     pointee p;
@@ -39,17 +41,15 @@ private:
 
 
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-array <Allocator <Pointee>>::array (size_t passive) : p {passive}
+template <typename T>
+array <T>::array (size_t passive) : p {passive}
 {
     allocator::allocate (p);
     p.now = p.begin;
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::push_back (value_type t) -> auto&
+template <typename T>
+auto array <T>::push_back (value_type t) -> auto&
 {
     if (FULL)
     {
@@ -64,60 +64,52 @@ auto array <Allocator <Pointee>>::push_back (value_type t) -> auto&
     return *this;
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::passive () const -> size_t
+template <typename T>
+auto array <T>::passive () const -> size_t
 {
     return p.passive ();
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::active () const -> size_t
+template <typename T>
+auto array <T>::active () const -> size_t
 {
     return p.active ();
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::capacity () const -> size_t
+template <typename T>
+auto array <T>::capacity () const -> size_t
 {
     return p.active () + p.passive ();
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::begin () -> auto
+template <typename T>
+auto array <T>::begin () -> pointer
 {
     return p.begin;
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::end () -> auto
+template <typename T>
+auto array <T>::end () -> pointer
 {
-    p.end;
+    return p.end;
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::operator[] (size_t i) -> reference
+template <typename T>
+auto array <T>::operator[] (size_t i) -> reference
 {
     assert (i >= 0 and i <= active());
     return * (p.begin + i);
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-auto array <Allocator <Pointee>>::operator[] (size_t i) const -> reference
+template <typename T>
+auto array <T>::operator[] (size_t i) const -> reference
 {
     assert (i >= 0 and i <= active());
     return * (p.begin + i);
 }
 
-template <typename Pointee, template <typename...> typename Allocator>
-requires (is_ok <Pointee, Allocator>)
-inline std::ostream& operator<< (std::ostream& os, array<Allocator<Pointee>> const& a)
+template <typename T>
+inline std::ostream& operator<< (std::ostream& os, array<T> const& a)
 {
     for (int i = 0; i < a.active(); ++i)
     {

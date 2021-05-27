@@ -10,10 +10,46 @@
 
 TEST_CASE ("interface")
 {
+    SECTION ("construction")
     {
-        auto o = array <int> {};
+        {
+            auto o = array <int> {};
+            size_t a = o.passive ();
+            size_t b = o.active ();
+            size_t c = o.capacity ();
+            
+            int* d = o.begin ();
+            int* e = o.end ();
+            
+            for (auto curr : o)
+            {
+                
+            }
+            
+        }
+        
+        {
+            auto o = array <int, 10> {};
+            size_t a = o.passive ();
+            size_t b = o.active ();
+            size_t c = o.capacity ();
+            
+            int* d = o.begin ();
+            int* e = o.end ();
+            
+            for (auto curr : o)
+            {
+                
+            }
+        }
     }
 }
+
+
+
+
+
+
 
 
 TEST_CASE ("static array")
@@ -26,12 +62,12 @@ TEST_CASE ("dynamic array")
     GIVEN ("an allocator type")
     {
         using value_type = int;
-        using allocator = allocator <pointee <int>>;
+//        using allocator = allocator <pointee <int>>;
         
         AND_GIVEN ("an array with passive = 2")
         {
             constexpr auto capacity = size_t {2};
-            auto a = array <allocator> {capacity};
+            auto a = array <value_type> {capacity};
             
             THEN ("passive == 2")
             {

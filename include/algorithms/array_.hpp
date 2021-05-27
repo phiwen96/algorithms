@@ -1,8 +1,10 @@
 #pragma once
 #define INTERFACE(...)
 
-template <typename...>
+template <typename T, size_t...>
 struct array;
+
+
 
 INTERFACE ({
         

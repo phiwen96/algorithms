@@ -20,7 +20,7 @@ struct pointee <T>
     pointer end {nullptr};
     pointer now {nullptr};
     
-    pointee (pointer begin, pointer end, pointer now);
+    pointee (pointer begin = nullptr, pointer end = nullptr, pointer now = nullptr);
     pointee (pointer begin, pointer end);
     pointee (size_t capacity);
     
