@@ -37,12 +37,22 @@ struct array <T, N>
     
     constexpr auto begin () -> pointer
     {
-        return a;
+        return p.begin;
+    }
+    
+    constexpr auto begin () const -> pointer
+    {
+        return p.begin;
     }
     
     constexpr auto end () -> pointer
     {
-        return a + N;
+        return p.now;
+    }
+    
+    constexpr auto end () const -> pointer
+    {
+        return p.now;
     }
 
 private:

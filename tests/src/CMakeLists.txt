@@ -29,6 +29,7 @@ ph_add_test (vector)
 ph_add_test (arena)
 ph_add_test (array)
 ph_add_test (pointee)
+ph_add_test (main)
 
 # target_link_libraries (test_${PROJECT_NAME}_algorithms PRIVATE ${PROJECT_NAME} Catch2::Catch2 ph::color)
 # target_include_directories (test_${PROJECT_NAME}_algorithms PRIVATE include ph::color)

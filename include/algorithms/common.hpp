@@ -121,5 +121,17 @@ analyzer (T) -> analyzer <T>;
 
 #define FULL (active() + 1 >= passive())
 
-
-
+//auto operator<< (std::ostream& os, auto&& value) -> std::ostream&
+//requires requires (decltype (value))
+//{
+//    {value.begin ()};
+//    {value.end ()};
+//}
+//{
+//    return os << std::forward <decltype (value)> (value);
+//}
+//
+//auto operator<< (std::ostream& os, auto&& value) -> std::ostream&
+//{
+//    return os << std::forward <decltype (value)> (value);
+//}

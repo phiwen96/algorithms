@@ -22,16 +22,20 @@ struct array <T>
     using pointer = typename pointee::pointer;
     
     array (size_t passive = 2);
+    ~array ();
     
-    auto push_back (value_type) -> auto&;
+    auto push_back (auto&&) -> auto&;
     auto passive () const -> size_t;
     auto active () const -> size_t;
     auto capacity () const -> size_t;
     auto begin ()   -> pointer;
+    auto begin () const   -> pointer;
     auto end ()     -> pointer;
+    auto end () const    -> pointer;
     
     auto operator[] (size_t i) -> reference;
     auto operator[] (size_t i) const -> reference;
+    auto operator+= (auto&&) -> auto&;
     
 
 
@@ -39,7 +43,15 @@ private:
     pointee p;
 };
 
-
+template <typename T>
+inline std::ostream& operator<< (std::ostream& os, array<T> const& a)
+{
+    for (int i = 0; i < a.active(); ++i)
+    {
+        os << a [i] << " ";
+    }
+    return os;
+}
 
 template <typename T>
 array <T>::array (size_t passive) : p {passive}
@@ -49,7 +61,13 @@ array <T>::array (size_t passive) : p {passive}
 }
 
 template <typename T>
-auto array <T>::push_back (value_type t) -> auto&
+array <T>::~array ()
+{
+    allocator::deallocate (p);
+}
+
+template <typename T>
+auto array <T>::push_back (auto&& value) -> auto&
 {
     if (FULL)
     {
@@ -59,7 +77,7 @@ auto array <T>::push_back (value_type t) -> auto&
         p.now = p.begin + act;
     }
     
-    *p.now = t;
+    *p.now = std::forward <decltype (value)> (value);
     ++p.now;
     return *this;
 }
@@ -89,9 +107,21 @@ auto array <T>::begin () -> pointer
 }
 
 template <typename T>
+auto array <T>::begin () const -> pointer
+{
+    return p.begin;
+}
+
+template <typename T>
 auto array <T>::end () -> pointer
 {
-    return p.end;
+    return p.now;
+}
+
+template <typename T>
+auto array <T>::end () const -> pointer
+{
+    return p.now;
 }
 
 template <typename T>
@@ -109,14 +139,12 @@ auto array <T>::operator[] (size_t i) const -> reference
 }
 
 template <typename T>
-inline std::ostream& operator<< (std::ostream& os, array<T> const& a)
+auto array <T>::operator+= (auto&& value) -> auto&
 {
-    for (int i = 0; i < a.active(); ++i)
-    {
-        os << a [i] << " ";
-    }
-    return os;
+    return push_back (std::forward <decltype (value)> (value));
 }
+
+
 
 
 #include "array_1.hpp"
