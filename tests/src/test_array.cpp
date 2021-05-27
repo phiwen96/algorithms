@@ -8,6 +8,12 @@
 #include <algorithms/size.hpp>
 
 
+TEST_CASE ("interface")
+{
+    {
+        auto o = array <int> {};
+    }
+}
 
 
 TEST_CASE ("static array")
@@ -20,7 +26,7 @@ TEST_CASE ("dynamic array")
     GIVEN ("an allocator type")
     {
         using value_type = int;
-        using allocator = allocator <pointee <value_type>>;
+        using allocator = allocator <pointee <int>>;
         
         AND_GIVEN ("an array with passive = 2")
         {

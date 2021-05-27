@@ -7,14 +7,16 @@
 
 
 
-template <typename T, template <size_t...> typename Size, size_t N>
-struct array <T, Size <N>>
+template <typename T>
+requires requires (T& t)
+{
+    requires std::is_fundamental_v <T>;
+}
+struct array <T>
 {
 
 
 
-private:
-    pointee <T, Size <N>> m_p;
 };
 
 
