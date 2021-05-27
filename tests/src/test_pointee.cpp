@@ -7,8 +7,6 @@
 
 int a [10] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-#define INIT(now) \
-    auto p = pointee <int> {a, a + 10, now};
 
 
 TEST_CASE ("active and passive")
@@ -26,7 +24,28 @@ TEST_CASE ("active and passive")
         {
             REQUIRE (p.active() == 0);
         }
+        
+        AND_GIVEN ("a growth factor")
+        {
+            constexpr int growth_factor = 4;
+
+            WHEN ("growing the pointee")
+            {
+                p *= growth_factor;
+                
+                THEN ("passive should change")
+                {
+                    REQUIRE (p.passive() == 2 * growth_factor);
+                }
+                
+                THEN ("active should stay the same")
+                {
+                    REQUIRE (p.active() == 0);
+                }
+            }
+        }
     }
+    
     GIVEN ("a pointee")
     {
         auto p = pointee <int> {nullptr, nullptr};
