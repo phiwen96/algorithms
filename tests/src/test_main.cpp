@@ -14,8 +14,11 @@ enum opcode : int
 {
     OP_RETURN,
     OP_CONSTANT,
+    OP_NEGATE,
     OP_ADD,
-    OP_NEGATE
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE
 };
 
 
@@ -65,6 +68,22 @@ auto disassemble = [] (array <int>& code, array <int>& consts) {
                 std::cout << "OP_NEGATE" << std::endl;
                 break;
                 
+            case opcode::OP_ADD:
+                std::cout << "OP_ADD" << std::endl;
+                break;
+                
+            case opcode::OP_SUBTRACT:
+                std::cout << "OP_SUBTRACT" << std::endl;
+                break;
+                
+            case opcode::OP_MULTIPLY:
+                std::cout << "OP_MULTIPLY" << std::endl;
+                break;
+                
+            case opcode::OP_DIVIDE:
+                std::cout << "OP_DIVIDE" << std::endl;
+                break;
+                
             default:
                 std::cout << "UNKNOWN" << std::endl;
                 break;
@@ -99,23 +118,56 @@ struct vm
         {
             switch (*ip)
             {
+                    
                 case opcode::OP_RETURN:
                 {
                     return result::OK;
                 }
+                    
                 case opcode::OP_CONSTANT:
                 {
-                    int index = *ip;
-                    int constant = consts [* (ip + 1)];
+                    int index = * (++ip);
+                    int constant = consts [index];
                     push (constant);
-                    ip += 2;
+                    ++ip;
                     break;
                 }
+                    
                 case opcode::OP_NEGATE:
                 {
                     push (-pop ());
+                    ++ip;
                     break;
                 }
+                    
+                case opcode::OP_ADD:
+                {
+                    push (pop () + pop ());
+                    ++ip;
+                    break;
+                }
+                    
+                case opcode::OP_SUBTRACT:
+                {
+                    push (pop () - pop ());
+                    ++ip;
+                    break;
+                }
+                    
+                case opcode::OP_MULTIPLY:
+                {
+                    push (pop () * pop ());
+                    ++ip;
+                    break;
+                }
+                    
+                case opcode::OP_DIVIDE:
+                {
+                    push (pop () / pop ());
+                    ++ip;
+                    break;
+                }
+                    
                 default:
                 {
                     throw;
@@ -153,6 +205,15 @@ TEST_CASE ("interface")
     code += 1;
     code += opcode::OP_NEGATE;
     
+    code += opcode::OP_CONSTANT;
+    consts += 1;
+    code += 2;
+    
+    code += opcode::OP_CONSTANT;
+    consts += 2;
+    code += 3;
+    
+    code += opcode::OP_ADD;
     
     code += opcode::OP_RETURN;
     
