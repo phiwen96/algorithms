@@ -14,7 +14,8 @@ enum opcode : int
 {
     OP_RETURN,
     OP_CONSTANT,
-    OP_ADD
+    OP_ADD,
+    OP_NEGATE
 };
 
 
@@ -39,88 +40,149 @@ struct constant <T>
 
 
 
-
-struct chunk
-{
+auto disassemble = [] (array <int>& code, array <int>& consts) {
     
-    array <int> code;
-    array <int> constants;
+    auto dis_const = [&] (int*& i) {
+        int index = * (i + 1);
+        int c = consts [index];
+        std::cout << "OP_CONSTANT " << c << std::endl;
+        ++i;
+    };
     
-    auto add_opcode (int b) -> void
+    for (auto i = code.begin(); i < code.end(); ++i)
     {
-        code += b;
-    }
-    
-    auto add_constant (int c) -> int
-    {
-        constants += c;
-        return constants.active() - 1;
-    }
-
-    
-
-};
-
-
-
-struct disassembler
-{
-    static auto disassemble_chunk (chunk const& c)
-    {
-        for (auto offset = c.code.begin(); offset < c.code.end(); ++offset)
-        {
-            offset = disassemble_instruction (c, offset);
-        }
-
-    }
-    
-    
-private:
-    static auto disassemble_instruction (chunk const& c, int* offset) -> int*
-    {
-        switch (*offset)
+        switch (*i)
         {
             case opcode::OP_CONSTANT:
-            {
-                return constant_instruction ("OP_CONSTANT", c, offset);
-            }
+                dis_const (i);
+                break;
                 
             case opcode::OP_RETURN:
-            {
-                return simple_instruction ("OP_RETURN", c, offset);
-            }
+                std::cout << "OP_RETURN" << std::endl;
+                break;
+                
+            case opcode::OP_NEGATE:
+                std::cout << "OP_NEGATE" << std::endl;
+                break;
                 
             default:
-            {
-                throw;
-            }
+                std::cout << "UNKNOWN" << std::endl;
+                break;
         }
-    }
-    static auto simple_instruction (char const* instr, chunk const& c, int* offset) -> int*
-    {
-        std::cout << instr << std::endl;
-        return offset + 1;
-    }
-    static auto constant_instruction (char const* instr, chunk const& c, int* offset) -> int*
-    {
-        int constant = c.constants [* (offset + 1)];
-        std::cout << instr << " " << constant << std::endl;
-        return offset + 2;
     }
 };
 
 
+
+
+
+
+struct vm
+{
+    cexp size_t stack_max = 256;
+    enum result
+    {
+        OK,
+        COMPILE_ERROR,
+        RUNTIME_ERROR
+    };
+    int stack [stack_max];
+    int* stack_top;
+    int* ip;
+    array <int>& code;
+    array <int>& consts;
+    
+    vm (array <int>& code, array <int>& consts) : stack {}, stack_top {stack}, ip {code.begin()}, code {code}, consts {consts} {}
+    auto run () -> result
+    {
+        while (ip < code.end())
+        {
+            switch (*ip)
+            {
+                case opcode::OP_RETURN:
+                {
+                    return result::OK;
+                }
+                case opcode::OP_CONSTANT:
+                {
+                    int index = *ip;
+                    int constant = consts [* (ip + 1)];
+                    push (constant);
+                    ip += 2;
+                    break;
+                }
+                case opcode::OP_NEGATE:
+                {
+                    push (-pop ());
+                    break;
+                }
+                default:
+                {
+                    throw;
+                }
+                    
+            }
+        }
+    }
+    
+private:
+    auto push (int value) -> void
+    {
+        *stack_top = value;
+        ++stack_top;
+    }
+    auto pop () -> int
+    {
+        return * (--stack_top);
+    }
+};
 
 
 
 TEST_CASE ("interface")
 {
-    auto o = chunk {};
-    o.add_opcode (opcode::OP_CONSTANT);
-    o.add_opcode (o.add_constant (10));
+    auto code   = array <int> {};
+    auto consts = array <int> {};
+    
+    code += opcode::OP_CONSTANT;
+    consts += 10;
+    code += 0;
+    
+    code += opcode::OP_CONSTANT;
+    consts += 20;
+    code += 1;
+    code += opcode::OP_NEGATE;
     
     
-    disassembler::disassemble_chunk (o);
+    code += opcode::OP_RETURN;
+    
+    
+    
+    
+    auto v = vm {code, consts};
+    
+    
+    
+    
+    disassemble (code, consts);
+    
+    std::cout << "==================" << std::endl;
+    
+    switch (vm::result r = v.run())
+    {
+        case vm::result::OK:
+            break;
+            
+        case vm::result::COMPILE_ERROR:
+            throw std::runtime_error ("compile error!");
+            
+        case vm::result::RUNTIME_ERROR:
+            throw std::runtime_error ("runtime error!");
+            
+        default:
+            break;
+    }
+
 }
 
 

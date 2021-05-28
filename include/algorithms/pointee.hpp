@@ -28,18 +28,18 @@ struct pointee <T>
     auto passive () const noexcept      -> size_t;
     auto capacity () const noexcept     -> size_t;
     
-    auto operator* () noexcept          -> reference;
-    
-    auto operator-  (int i) noexcept    -> auto&;
-    auto operator+= (auto n) noexcept   -> auto&;
-    auto operator-= (auto n) noexcept   -> auto&;
-    auto operator++ () noexcept         -> auto&;
-    auto operator++ (int) noexcept      -> auto&;
-    auto operator-- () noexcept         -> auto&;
-    auto operator-- (int) noexcept      -> auto&;
+//    auto operator* () noexcept          -> reference;
+//
+//    auto operator-  (int i) noexcept    -> auto&;
+//    auto operator+= (auto n) noexcept   -> auto&;
+//    auto operator-= (auto n) noexcept   -> auto&;
+//    auto operator++ () noexcept         -> auto&;
+//    auto operator++ (int) noexcept      -> auto&;
+//    auto operator-- () noexcept         -> auto&;
+//    auto operator-- (int) noexcept      -> auto&;
     auto operator*= (size_t growth_factor) noexcept   -> auto&;
     
-    friend std::ostream& operator<< (std::ostream& os, pointee const& p);
+//    friend std::ostream& operator<< (std::ostream& os, pointee const& p);
 };
 
 
@@ -85,60 +85,60 @@ pointee <T>::pointee (size_t cap) : begin {nullptr}, end {begin + cap}, now {beg
 {
     
 }
-
-template <typename T>
-auto pointee <T>::operator* () noexcept -> reference
-{
-    return *now;
-}
-
-template <typename T>
-auto pointee <T>::operator++ () noexcept -> auto&
-{
-    ++now;
-    return *this;
-}
-
-template <typename T>
-auto pointee <T>::operator++ (int) noexcept -> auto&
-{
-    now++;
-    return *this;
-}
-
-template <typename T>
-auto pointee <T>::operator-- () noexcept -> auto&
-{
-    --now;
-    return *this;
-}
-
-template <typename T>
-auto pointee <T>::operator-- (int) noexcept -> auto&
-{
-    now--;
-    return *this;
-}
-
-template <typename T>
-auto pointee <T>::operator- (int i) noexcept -> auto&
-{
-    return *this;
-}
-
-template <typename T>
-auto pointee <T>::operator+= (auto n) noexcept -> auto&
-{
-    now += n;
-    return *this;
-}
-
-template <typename T>
-auto pointee <T>::operator-= (auto n) noexcept -> auto&
-{
-    now -= n;
-    return *this;
-}
+//
+//template <typename T>
+//auto pointee <T>::operator* () noexcept -> reference
+//{
+//    return *now;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator++ () noexcept -> auto&
+//{
+//    ++now;
+//    return *this;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator++ (int) noexcept -> auto&
+//{
+//    now++;
+//    return *this;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator-- () noexcept -> auto&
+//{
+//    --now;
+//    return *this;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator-- (int) noexcept -> auto&
+//{
+//    now--;
+//    return *this;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator- (int i) noexcept -> auto&
+//{
+//    return *this;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator+= (auto n) noexcept -> auto&
+//{
+//    now += n;
+//    return *this;
+//}
+//
+//template <typename T>
+//auto pointee <T>::operator-= (auto n) noexcept -> auto&
+//{
+//    now -= n;
+//    return *this;
+//}
 
 template <typename T>
 auto pointee <T>::operator*= (size_t growth_factor) noexcept -> auto&
@@ -146,17 +146,17 @@ auto pointee <T>::operator*= (size_t growth_factor) noexcept -> auto&
     end = begin + (capacity() * growth_factor);
     return *this;
 }
-
-
-template <typename T>
-inline std::ostream& operator<< (std::ostream& os, pointee <T> const& p)
-{
-    for (auto i = p.m_begin; i < p.m_end; ++i)
-    {
-        os << *i << " ";
-    }
-    return os;
-}
+//
+//
+//template <typename T>
+//inline std::ostream& operator<< (std::ostream& os, pointee <T> const& p)
+//{
+//    for (auto i = p.m_begin; i < p.m_end; ++i)
+//    {
+//        os << *i << " ";
+//    }
+//    return os;
+//}
 
 
 
