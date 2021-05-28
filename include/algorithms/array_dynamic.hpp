@@ -10,6 +10,14 @@
 //    typename Pointee::reference;
 //    typename Pointee::pointer;
 //};
+#ifdef GROW
+#undef GROW
+#define GROW \
+    size_t act = active(); \
+    p *= growth_factor; \
+    allocator::reallocate (p); \
+    p.now = p.begin + act;
+#endif
 
 template <typename T>
 struct array <T>
@@ -24,7 +32,7 @@ struct array <T>
     array (size_t passive = 2);
     ~array ();
     
-    auto push_back (auto&&) -> auto&;
+    auto push_back (value_type) -> auto&;
     auto passive () const -> size_t;
     auto active () const -> size_t;
     auto capacity () const -> size_t;
@@ -33,9 +41,10 @@ struct array <T>
     auto end ()     -> pointer;
     auto end () const    -> pointer;
     
+    
     auto operator[] (size_t i) -> reference;
     auto operator[] (size_t i) const -> reference;
-    auto operator+= (auto&&) -> auto&;
+    auto operator+= (value_type) -> auto&;
     
 
 
@@ -67,17 +76,15 @@ array <T>::~array ()
 }
 
 template <typename T>
-auto array <T>::push_back (auto&& value) -> auto&
+auto array <T>::push_back (value_type value) -> auto&
 {
     if (FULL)
     {
-        size_t act = active();
-        p *= growth_factor;
-        allocator::reallocate (p);
-        p.now = p.begin + act;
+        GROW
     }
+//    ++p.now;
     
-    *p.now = std::forward <decltype (value)> (value);
+    *p.now = value;
     ++p.now;
     return *this;
 }
@@ -139,9 +146,9 @@ auto array <T>::operator[] (size_t i) const -> reference
 }
 
 template <typename T>
-auto array <T>::operator+= (auto&& value) -> auto&
+auto array <T>::operator+= (value_type value) -> auto&
 {
-    return push_back (std::forward <decltype (value)> (value));
+    return push_back (value);
 }
 
 
