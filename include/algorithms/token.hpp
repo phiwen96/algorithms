@@ -1,4 +1,5 @@
 #pragma once
+#include "common.hpp"
 
 /// lkml
 #define TOKEN \
@@ -47,7 +48,9 @@
 template <typename parser>
 struct token_number
 {
-    
+    cexp bool number = true;
+    cexp bool identifier = false;
+    cexp char const* lexeme = "";
 };
 
 struct token
