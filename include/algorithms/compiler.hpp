@@ -51,6 +51,7 @@ private:
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// a function for each grammar production
+    /// every kind of expression
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     auto number() -> void;
     auto grouping() -> void;
@@ -72,52 +73,52 @@ private:
     auto emit_bytes (auto... b) -> void;
     
     
-    parse_rule  rules [50] {
-         {&compiler::grouping, NULL,   precedence::PREC_NONE}, //LEFT_PAREN
-         {NULL,     NULL,   precedence::PREC_NONE}, // RIGHT_PAREN
-         {NULL,     NULL,   precedence::PREC_NONE}, //LEFT_BRACE
-         {NULL,     NULL,   precedence::PREC_NONE}, // RIGHT_BRACE
-         {NULL,     NULL,   precedence::PREC_NONE}, // COMMA
-         {NULL,     NULL,   precedence::PREC_NONE}, // DOT
-         {&compiler::unary,    &compiler::binary, precedence::PREC_TERM}, // MINUS
-         {NULL,     &compiler::binary, precedence::PREC_TERM}, // PLUS
-         {NULL,     NULL,   precedence::PREC_NONE}, // SEMICOLON
-         {NULL,     &compiler::binary, precedence::PREC_FACTOR}, // SLASH
-         {NULL,     &compiler::binary, precedence::PREC_FACTOR}, // STAR
-         {NULL,     NULL,   precedence::PREC_NONE}, // BANG
-         {NULL,     NULL,   precedence::PREC_NONE}, // BANG_EQUAL
-         {NULL,     NULL,   precedence::PREC_NONE}, // EQUAL
-         {NULL,     NULL,   precedence::PREC_NONE}, // EQUAL_EQUAL
-         {NULL,     NULL,   precedence::PREC_NONE}, // GREATER
-         {NULL,     NULL,   precedence::PREC_NONE}, // GREATER_EQUAL
-         {NULL,     NULL,   precedence::PREC_NONE}, // LESS
-         {NULL,     NULL,   precedence::PREC_NONE}, // LESS_EQUAL
-         {NULL,     NULL,   precedence::PREC_NONE}, // IDENTIFIER
-         {NULL,     NULL,   precedence::PREC_NONE}, // STRING
-//         {&compiler::number,   NULL,   precedence::PREC_NONE}, // NUMBER
-         {NULL,     NULL,   precedence::PREC_NONE}, // AND
-         {NULL,     NULL,   precedence::PREC_NONE}, // CLASS
-         {NULL,     NULL,   precedence::PREC_NONE}, // ELSE
-//         {&compiler::literal,     NULL,   precedence::PREC_NONE}, // FALSE
-         {NULL,     NULL,   precedence::PREC_NONE}, // FOR
-         {NULL,     NULL,   precedence::PREC_NONE}, // FUN
-         {NULL,     NULL,   precedence::PREC_NONE}, // IF
-//         {&compiler::literal,     NULL,   precedence::PREC_NONE}, // NIL
-         {NULL,     NULL,   precedence::PREC_NONE}, // OR
-         {NULL,     NULL,   precedence::PREC_NONE}, // PRINT
-         {NULL,     NULL,   precedence::PREC_NONE}, // RETURN
-         {NULL,     NULL,   precedence::PREC_NONE}, // SUPER
-         {NULL,     NULL,   precedence::PREC_NONE}, // THIS
-//         {&compiler::literal,     NULL,   precedence::PREC_NONE}, // TRUE
-         {NULL,     NULL,   precedence::PREC_NONE}, // VAR
-         {NULL,     NULL,   precedence::PREC_NONE}, // WHILE
-         {NULL,     NULL,   precedence::PREC_NONE}, // ERROR
-         {NULL,     NULL,   precedence::PREC_NONE}, // _EOF
-    };
+//    parse_rule  rules [50] {
+//         {&compiler::grouping, NULL,   precedence::PREC_NONE}, //LEFT_PAREN
+//         {NULL,     NULL,   precedence::PREC_NONE}, // RIGHT_PAREN
+//         {NULL,     NULL,   precedence::PREC_NONE}, //LEFT_BRACE
+//         {NULL,     NULL,   precedence::PREC_NONE}, // RIGHT_BRACE
+//         {NULL,     NULL,   precedence::PREC_NONE}, // COMMA
+//         {NULL,     NULL,   precedence::PREC_NONE}, // DOT
+//         {&compiler::unary,    &compiler::binary, precedence::PREC_TERM}, // MINUS
+//         {NULL,     &compiler::binary, precedence::PREC_TERM}, // PLUS
+//         {NULL,     NULL,   precedence::PREC_NONE}, // SEMICOLON
+//         {NULL,     &compiler::binary, precedence::PREC_FACTOR}, // SLASH
+//         {NULL,     &compiler::binary, precedence::PREC_FACTOR}, // STAR
+//         {NULL,     NULL,   precedence::PREC_NONE}, // BANG
+//         {NULL,     NULL,   precedence::PREC_NONE}, // BANG_EQUAL
+//         {NULL,     NULL,   precedence::PREC_NONE}, // EQUAL
+//         {NULL,     NULL,   precedence::PREC_NONE}, // EQUAL_EQUAL
+//         {NULL,     NULL,   precedence::PREC_NONE}, // GREATER
+//         {NULL,     NULL,   precedence::PREC_NONE}, // GREATER_EQUAL
+//         {NULL,     NULL,   precedence::PREC_NONE}, // LESS
+//         {NULL,     NULL,   precedence::PREC_NONE}, // LESS_EQUAL
+//         {NULL,     NULL,   precedence::PREC_NONE}, // IDENTIFIER
+//         {NULL,     NULL,   precedence::PREC_NONE}, // STRING
+////         {&compiler::number,   NULL,   precedence::PREC_NONE}, // NUMBER
+//         {NULL,     NULL,   precedence::PREC_NONE}, // AND
+//         {NULL,     NULL,   precedence::PREC_NONE}, // CLASS
+//         {NULL,     NULL,   precedence::PREC_NONE}, // ELSE
+////         {&compiler::literal,     NULL,   precedence::PREC_NONE}, // FALSE
+//         {NULL,     NULL,   precedence::PREC_NONE}, // FOR
+//         {NULL,     NULL,   precedence::PREC_NONE}, // FUN
+//         {NULL,     NULL,   precedence::PREC_NONE}, // IF
+////         {&compiler::literal,     NULL,   precedence::PREC_NONE}, // NIL
+//         {NULL,     NULL,   precedence::PREC_NONE}, // OR
+//         {NULL,     NULL,   precedence::PREC_NONE}, // PRINT
+//         {NULL,     NULL,   precedence::PREC_NONE}, // RETURN
+//         {NULL,     NULL,   precedence::PREC_NONE}, // SUPER
+//         {NULL,     NULL,   precedence::PREC_NONE}, // THIS
+////         {&compiler::literal,     NULL,   precedence::PREC_NONE}, // TRUE
+//         {NULL,     NULL,   precedence::PREC_NONE}, // VAR
+//         {NULL,     NULL,   precedence::PREC_NONE}, // WHILE
+//         {NULL,     NULL,   precedence::PREC_NONE}, // ERROR
+//         {NULL,     NULL,   precedence::PREC_NONE}, // _EOF
+//    };
     
     static auto get_rule(token::type type) -> parse_rule*
     {
-      return &rules[type];
+//      return &rules[type];
     }
     
 };
@@ -244,18 +245,19 @@ auto compiler::parse_precedence (precedence p) -> void
 
      prefixRule();
     
-    while (p <= get_rule(prs.current.t)->precedence) {
-        advance();
-        parse_fn infixRule = get_rule(prs.previous.t)->infix;
-        infixRule();
-      }
+//    while (p <= get_rule(prs.current.t)->precedence)
+//    {
+//        advance();
+//        parse_fn infixRule = get_rule(prs.previous.t)->infix;
+//        infixRule();
+//    }
 }
 
 auto compiler::binary () -> void
 {
     token::type operatorType = prs.previous.t;
       parse_rule* rule = get_rule (operatorType);
-      parse_precedence ((precedence)(rule->precedence + 1));
+//      parse_precedence ((precedence)(rule->precedence + 1));
 
       switch (operatorType) {
           case token::type::TOKEN_PLUS:          emit_bytes (opcode::OP_ADD); break;
