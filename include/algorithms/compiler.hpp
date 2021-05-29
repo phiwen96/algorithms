@@ -24,6 +24,7 @@ struct compiler
         advance ();
         expression ();
         consume (token::type::TOKEN_EOF, "Expect end of expression.");
+        emit_return ();
     }
     
     // returns whether or not compilation succeeded
@@ -33,6 +34,48 @@ struct compiler
     }
     
 private:
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// parsing utility functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /*
+     It asks the scanner for the next token and stores it for later use.
+     Before doing that, it takes the old current token and stashes that in a previous field.
+     */
+    auto advance () -> void
+    {
+        prs.previous = prs.current;
+        
+        prs.current = sc.scan_token ();
+        
+        if (prs.current.t == token::type::TOKEN_ERROR)
+        {
+            throw;
+        }
+    }
+    
+    /*
+     It’s similar to advance() in that it reads the next token.
+     But it also validates that the token has an expected type.
+     If not, it reports an error. This function is the foundation
+     of most syntax errors in the compiler.
+     */
+    auto consume (token::type t, const char* msg) -> void
+    {
+      if (prs.current.t == t)
+      {
+        advance ();
+        return;
+      }
+
+      error_at_current (msg);
+    }
+    
+    auto expression () -> void
+    {
+        
+    }
+    
     auto unary() -> void
     {
       token::type operatorType = prs.previous.t;
@@ -58,66 +101,6 @@ private:
     {
       int value = strtod (prs.previous.start, NULL);
       emit_constants (value);
-    }
-    
-    auto emit_constants(int value) -> void
-    {
-      emit_bytes (opcode::OP_CONSTANT, make_constant (value));
-    }
-    
-    auto make_constant (int value) -> int
-    {
-        consts += value;
-        int index = consts.active ();
-        
-//      if (constant > UINT8_MAX) {
-//        error("Too many constants in one chunk.");
-//        return 0;
-//      }
-
-      return index;
-    }
-    
-    auto expression () -> void
-    {
-        
-    }
-    
-    auto emit_return (int b) -> void
-    {
-        emit_bytes (opcode::OP_RETURN);
-    }
-    
-    auto emit_bytes (auto... b) -> void
-    {
-        ((code += b), ...);
-    }
-    
-    /*
-     It asks the scanner for the next token and stores it for later use.
-     Before doing that, it takes the old current token and stashes that in a previous field.
-     */
-    auto advance () -> void
-    {
-        prs.previous = prs.current;
-        
-        prs.current = sc.scan_token ();
-        
-        if (prs.current.t == token::type::TOKEN_ERROR)
-        {
-            throw;
-        }
-    }
-    
-    auto consume (token::type t, const char* msg) -> void
-    {
-      if (prs.current.t == t)
-      {
-        advance ();
-        return;
-      }
-
-      error_at_current (msg);
     }
     
     auto error_at_current(const char* msg) -> void
@@ -156,4 +139,43 @@ private:
         fprintf (stderr, ": %s\n", msg);
         prs.had_error = true;
     }
+    
+    
+    
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// code generation utility functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    auto emit_constants(int value) -> void
+    {
+      emit_bytes (opcode::OP_CONSTANT, make_constant (value));
+    }
+    
+    auto make_constant (int value) -> int
+    {
+        consts += value;
+        int index = consts.active ();
+        
+//      if (constant > UINT8_MAX) {
+//        error("Too many constants in one chunk.");
+//        return 0;
+//      }
+
+      return index;
+    }
+    
+    auto emit_return () -> void
+    {
+        emit_bytes (opcode::OP_RETURN);
+    }
+    
+    auto emit_bytes (auto... b) -> void
+    {
+        ((code += b), ...);
+    }
+    
+    
+    
+    
 };
