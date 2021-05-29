@@ -62,6 +62,193 @@ struct scanner
     int line;
     
     scanner (char const* source) : start {source}, current {source}, line {1} {}
+    
+    auto scan_token () -> token
+    {
+        skip_whitespace ();
+        
+        start = current;
+        
+        if (is_at_end ())
+        {
+            return make_token (token::type::TOKEN_EOF);
+        }
+        
+        char c = advance ();
+        
+        if (isdigit (c))
+        {
+            return number ();
+        }
+        
+        
+        switch (c)
+        {
+            case '(': return make_token (token::type::TOKEN_LEFT_PAREN);
+            case ')': return make_token (token::type::TOKEN_RIGHT_PAREN);
+            case '{': return make_token (token::type::TOKEN_LEFT_BRACE);
+            case '}': return make_token (token::type::TOKEN_RIGHT_BRACE);
+            case ';': return make_token (token::type::TOKEN_SEMICOLON);
+            case ',': return make_token (token::type::TOKEN_COMMA);
+            case '.': return make_token (token::type::TOKEN_DOT);
+            case '-': return make_token (token::type::TOKEN_MINUS);
+            case '+': return make_token (token::type::TOKEN_PLUS);
+            case '/': return make_token (token::type::TOKEN_SLASH);
+            case '*': return make_token (token::type::TOKEN_STAR);
+                
+            case '!': return make_token (match ('=') ? token::type::TOKEN_BANG_EQUAL : token::type::TOKEN_BANG);
+            case '=': return make_token (match ('=') ? token::type::TOKEN_EQUAL_EQUAL : token::type::TOKEN_EQUAL);
+            case '>': return make_token (match ('=') ? token::type::TOKEN_GREATER_EQUAL : token::type::TOKEN_GREATER);
+            case '<': return make_token (match ('=') ? token::type::TOKEN_LESS_EQUAL : token::type::TOKEN_LESS);
+                
+            case '"': return string ();
+        }
+        
+        
+        
+        return make_error_token ("Unexpected character.");
+    }
+
+    
+private:
+    auto number () -> token
+    {
+        while (isdigit (peek ()))
+        {
+            advance ();
+        }
+        
+        if (peek () == '.' and isdigit (peek_next ()))
+        {
+            advance ();
+            
+            while (isdigit (peek ()))
+            {
+                advance ();
+            }
+        }
+        
+        return make_token (token::type::TOKEN_NUMBER);
+    }
+    
+    auto string () -> token
+    {
+        while (peek () != '=' and !is_at_end ())
+        {
+            if (peek () == '\n')
+            {
+                ++line;
+            }
+            advance ();
+        }
+        
+        if (is_at_end ())
+        {
+            return make_error_token ("Unterminated string.");
+        }
+        
+        return make_token (token::type::TOKEN_STRING);
+    }
+    
+    auto skip_whitespace () -> void
+    {
+        for (;;)
+        {
+            switch (char c = peek ()) {
+                case '\n':
+                    ++line;
+                case ' ':
+                case '\r':
+                case '\t':
+                {
+                    advance ();
+                    break;
+                }
+                case '/':
+                {
+                    if (peek_next () == '/')
+                    {
+                        // A comment goes until the end of the line.
+                        while (peek () != '\n' and !is_at_end ())
+                        {
+                            advance ();
+                        }
+                    } else
+                    {
+                        return;
+                    }
+                }
+
+                default:
+                    return;
+            }
+        }
+    }
+    
+    auto peek_next () const -> char
+    {
+        if (is_at_end ())
+        {
+            return '\0';
+            
+        } else
+        {
+            return current [1];
+        }
+    }
+    
+    auto peek () const -> char
+    {
+        return *current;
+    }
+    
+    auto match (char expected) -> bool
+    {
+        if (is_at_end ())
+        {
+            return false;
+            
+        } else if (*current != expected)
+        {
+            return false;
+        } else
+        {
+            ++current;
+            return true;
+        }
+    }
+    
+    auto advance () -> char
+    {
+        return *(current--);
+    }
+    
+    auto is_at_end () const -> bool
+    {
+        return *current == '\0';
+    }
+    
+    auto make_token (token::type t) -> token
+    {
+        return
+        {
+            .t = t,
+            .start = start,
+            .length = (int) (current - start),
+            .line = line
+        };
+    }
+    
+    auto make_error_token (char const* msg) -> token
+    {
+        return
+        {
+            .t = token::type::TOKEN_ERROR,
+            .start = msg,
+            .length = (int) strlen (msg),
+            .line = line
+        };
+    }
 };
 
 
@@ -116,10 +303,6 @@ auto disassemble = [] (array <int>& code, array <int>& consts) {
         }
     }
 };
-
-
-
-
 
 
 struct vm
@@ -274,6 +457,12 @@ TEST_CASE ("interface")
             break;
     }
 
+}
+
+
+TEST_CASE ("")
+{
+    
 }
 
 
