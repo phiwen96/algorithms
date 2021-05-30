@@ -142,18 +142,68 @@ TEST_CASE ("interface")
     
 }
 
+struct token_generator
+{
+    struct info
+    {
+        bool value;
+    };
+    
+    static auto skip (auto& sc) -> void
+    {
+        switch (char c = sc.peek ()) {
+            case '\n':
+                ++sc.line;
+            case ' ':
+            case '\r':
+            case '\t':
+            {
+                sc.advance ();
+                break;
+            }
+            case '/':
+            {
+                if (sc.peek_next () == '/')
+                {
+                    // A comment goes until the end of the line.
+                    while (sc.peek () != '\n' and !sc.is_at_end ())
+                    {
+                        sc.advance ();
+                    }
+                } else
+                {
+                    return;
+                }
+            }
+                
+            default:
+                return;
+        }
+    }
+    
+    static auto skip_characters_after_and_before (char c) -> info
+    {
+        return {c == '\n' or c == ' ' or c == '\r' or c == '\t'};
+    }
+};
+
+
 
 TEST_CASE ("")
 {
     using namespace std;
     
-    auto source = (char const*) "37+2-(7*4)";
+    auto source = (char const*) "37//37\n+2-(7*4)";
+    
     auto sc = scanner <token> {source};
+    token tok;
     
-    auto tok = sc.scan_token ();
+    while (tok = (token) sc, tok.t != token::type::TOKEN_EOF)
+    {
+        cout << tok.lex << endl;
+    }
     
-    cout << tok.lex << endl;
-
+    
 }
 
 

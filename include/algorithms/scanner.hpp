@@ -20,7 +20,7 @@ struct scanner
         
     }
     
-    auto scan_token () -> token
+    operator token_type ()
     {
         skip_whitespace ();
         
@@ -177,6 +177,7 @@ private:
         return make_token (token::type::TOKEN_STRING);
     }
     
+    /// This advances the scanner past any leading whitespace. After this call returns, we know the very next character is a meaningful one (or we’re at the end of the source code).
     auto skip_whitespace () -> void
     {
         for (;;)
@@ -224,11 +225,13 @@ private:
         }
     }
     
+    /// This simply returns the current character, but doesn’t consume it.
     auto peek () const -> char
     {
         return *current;
     }
     
+    /// If the current character is the desired one, we advance and return true. Otherwise, we return false to indicate it wasn’t matched.
     auto match (char expected) -> bool
     {
         if (is_at_end ())
@@ -245,6 +248,7 @@ private:
         }
     }
     
+    /// consumes the current character and returns it.
     auto advance () -> char
     {
         return *(current++);

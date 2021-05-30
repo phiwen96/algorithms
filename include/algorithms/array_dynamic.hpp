@@ -82,9 +82,9 @@ auto array <T>::push_back (value_type value) -> auto&
     {
         GROW
     }
-//    ++p.now;
     
-    *p.now = value;
+    new (p.now) value_type (value);
+//    *p.now = value;
     ++p.now;
     return *this;
 }
