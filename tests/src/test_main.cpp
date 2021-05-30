@@ -6,6 +6,10 @@
 #include <algorithms/common.hpp>
 #include <algorithms/opcode.hpp>
 #include <algorithms/vm.hpp>
+#include <algorithms/compiler.hpp>
+#include <algorithms/token.hpp>
+#include <algorithms/lexeme.hpp>
+#include <algorithms/scanner.hpp>
 
 
 
@@ -80,6 +84,7 @@ auto disassemble = [] (array <int>& code, array <int>& consts) {
 
 TEST_CASE ("interface")
 {
+    return;
     auto code   = array <int> {};
     auto consts = array <int> {};
     
@@ -140,10 +145,15 @@ TEST_CASE ("interface")
 
 TEST_CASE ("")
 {
-    auto code   = array <int> {};
-    auto consts = array <int> {};
+    using namespace std;
     
-    auto v = vm {code, consts};
+    auto source = (char const*) "37+2-(7*4)";
+    auto sc = scanner <token> {source};
+    
+    auto tok = sc.scan_token ();
+    
+    cout << tok.lex << endl;
+
 }
 
 

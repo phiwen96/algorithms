@@ -1,5 +1,6 @@
 #pragma once
 #include "common.hpp"
+#include "lexeme.hpp"
 
 /// lkml
 #define TOKEN \
@@ -44,6 +45,16 @@
     X (TOKEN_ERROR) \
     X (TOKEN_EOF)
 //BOOST_PP_VARIADIC_SIZE (__VA_ARGS__)
+
+
+template <char>
+struct token_imp;
+
+template <>
+struct token_imp <'('>
+{
+    lexeme lex;
+};
 
 template <typename parser>
 struct token_number
@@ -90,8 +101,7 @@ tok,
     };
     
     type t;
-    char const* start;
-    int length;
-    int line;
+    lexeme lex;
+    int line {0};
 };
 

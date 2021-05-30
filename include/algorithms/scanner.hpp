@@ -5,13 +5,17 @@
 /*
  scanner doesn’t report lexical errors. Instead, it creates special error tokens and leaves it up to the parser to report them.
  */
+
+template <typename TokenType>
 struct scanner
 {
-    char const* start;
-    char const* current;
+    using token_type = TokenType;
+    
+    char* start;
+    char* current;
     int line;
     
-    scanner (char const* source) : start {source}, current {source}, line {1}
+    scanner (char const* source) : start {(char*) source}, current {(char*) source}, line {1}
     {
         
     }
@@ -151,7 +155,6 @@ private:
                 advance ();
             }
         }
-        
         return make_token (token::type::TOKEN_NUMBER);
     }
     
@@ -244,7 +247,7 @@ private:
     
     auto advance () -> char
     {
-        return *(current--);
+        return *(current++);
     }
     
     auto is_at_end () const -> bool
@@ -254,12 +257,16 @@ private:
     
     auto make_token (token::type t) -> token
     {
+//        std::cout << *current << std::endl;
         return
         {
             .t = t,
-            .start = start,
-            .length = (int) (current - start),
-            .line = line
+            .lex
+            {
+                .begin = start,
+                .end = current,
+                .line = line
+            }
         };
     }
     
@@ -268,9 +275,12 @@ private:
         return
         {
             .t = token::type::TOKEN_ERROR,
-            .start = msg,
-            .length = (int) strlen (msg),
-            .line = line
+            .lex
+            {
+                .begin = (char*) msg,
+                .end = (char*) msg + (int) strlen (msg),
+                .line = line
+            }
         };
     }
 };
