@@ -1,10 +1,14 @@
 #pragma once
-#include "token.hpp"
+//#include "token.hpp"
 
+template <typename TokenType>
 struct parser
 {
-    token current;
-    token previous;
+    using token_type = TokenType;
+    
+    
+    token_type current;
+    token_type previous;
     bool had_error {false};
     bool panic_mode {false};
 };
@@ -25,10 +29,11 @@ enum precedence
 };
 
 
-using parse_fn =  void (*)();
 
+template <typename T>
 struct parse_rule
 {
+    using parse_fn =  void (*)();
     parse_fn prefix;
     parse_fn infix;
     parse_fn precedence;

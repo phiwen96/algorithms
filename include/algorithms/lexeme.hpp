@@ -7,6 +7,11 @@ struct lexeme
     char* begin;
     char* end;
     int line;
+    
+    lexeme (auto& scanner) : begin {scanner.start}, end {scanner.current}, line {scanner.line}
+    {
+        
+    }
 };
 
 

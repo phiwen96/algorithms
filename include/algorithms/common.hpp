@@ -135,3 +135,15 @@ analyzer (T) -> analyzer <T>;
 //{
 //    return os << std::forward <decltype (value)> (value);
 //}
+
+
+
+
+
+template <char c>
+concept is_digit = requires {requires (c >= '0' and c <= '9');};
+
+template <typename A, typename B>
+concept same_as = requires (){
+    requires std::is_same_v <A, B>;
+};

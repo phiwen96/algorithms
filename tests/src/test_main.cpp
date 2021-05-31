@@ -142,69 +142,392 @@ TEST_CASE ("interface")
     
 }
 
-struct token_generator
+
+
+//template <typename... tok>
+//struct toka;
+
+//template <typename
+
+enum struct toki_type
 {
-    struct info
-    {
-        bool value;
-    };
-    
-    static auto skip (auto& sc) -> void
-    {
-        switch (char c = sc.peek ()) {
-            case '\n':
-                ++sc.line;
-            case ' ':
-            case '\r':
-            case '\t':
-            {
-                sc.advance ();
-                break;
-            }
-            case '/':
-            {
-                if (sc.peek_next () == '/')
-                {
-                    // A comment goes until the end of the line.
-                    while (sc.peek () != '\n' and !sc.is_at_end ())
-                    {
-                        sc.advance ();
-                    }
-                } else
-                {
-                    return;
-                }
-            }
-                
-            default:
-                return;
-        }
-    }
-    
-    static auto skip_characters_after_and_before (char c) -> info
-    {
-        return {c == '\n' or c == ' ' or c == '\r' or c == '\t'};
-    }
+#define X(x, ...) \
+x,
+    TOKEN
+#undef X
 };
 
 
 
-TEST_CASE ("")
+template <typename Lexeme>
+struct toki
+{
+    using lexeme_type = Lexeme;
+//    type t;
+    lexeme_type lex;
+    int line {0};
+};
+
+
+
+
+#define TEST1(x) std::cout<<"TEST1: "<< x<<std::endl;
+
+
+#define TEST(x) std::cout<<"TEST: "<< x<<std::endl; TEST1
+
+
+template <typename... T>
+struct overload : T...
+{
+
+    using T::operator()...;
+    
+    constexpr overload () = default;
+    constexpr overload (T... t) : T {t}... {}
+};
+
+
+
+
+
+consteval int count_dots(std::string_view str) {
+    return std::count_if(std::begin(str), std::end(str), [](auto s){return s == '.';});
+}
+
+
+template <typename Token, typename Scanner, template <typename...> typename Tokenizer>
+    requires requires (Scanner& s) {
+        {s.peek ()} -> same_as <char>;
+        
+        typename Token::lexeme_type;
+        
+        requires requires (typename Token::lexeme_type& lex) {
+            {lex.begin} -> same_as <char*>;
+            {lex.end} -> same_as <char*>;
+            {lex.line} -> same_as <int>;
+        };
+    }
+constexpr auto make_tokenizer () -> auto
+{
+    return Tokenizer
+    {
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '+')
+        {
+            sc.advance ();
+            
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '-')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '*')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '/')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '.')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == ',')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == ':')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == ';')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '!')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '=')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '<')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '>')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '(')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == ')')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '{')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '}')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == '[')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c == ']')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        requires (c >= '0' and c <= '9')
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> toki <lexeme>
+        {
+            return
+            {
+                .lex = lexeme
+                {
+                    sc
+                },
+            };
+        }
+    };
+};
+
+
+
+
+TEST_CASE("")
 {
     using namespace std;
+
+    auto tokenizer = make_tokenizer <toki <lexeme>, scanner, overload> ();
     
     auto source = (char const*) "37//37\n+2-(7*4)";
     
-    auto sc = scanner <token> {source};
-    token tok;
+    auto sc = scanner {source};
     
-    while (tok = (token) sc, tok.t != token::type::TOKEN_EOF)
+    
+    
+    auto get_token = [] <typename... T> (overload <T...> & tokenizer, scanner& sc)
     {
-        cout << tok.lex << endl;
-    }
+        switch (sc.peek ())
+        {
+#define X(z, n, _) \
+            case n: \
+            {\
+                constexpr char q = n; \
+                return tokenizer.template operator()<q>(sc); \
+            }
+                
+                
+                BOOST_PP_REPEAT (255, X, _)
+#undef X
+            default:
+                break;
+        }
+    };
     
-    
+    auto tok = get_token (tokenizer, sc);
+    cout << *tok.lex.begin << endl;
+
 }
 
+
+TEST_CASE ("")
+{
+//    return;
+    using namespace std;
+    
+//    auto source = (char const*) "37//37\n+2-(7*4)";
+//
+//    auto sc = scanner <token> {source};
+//    token tok;
+//
+//    while (tok = (token) sc,
+//           tok.t != token::type::TOKEN_EOF)
+//    {
+//        cout << tok.lex << endl;
+//    }
+    
+    auto source = (char const*) "37//37\n+2-(7*4)";
+    
+//    auto sc = scanner <toki> {source};
+//    toki<> tok = sc;
+    
+//    while (tok = (toki<>) sc,
+//           tok.t != token::type::TOKEN_EOF)
+//    {
+//        cout << tok.lex << endl;
+//    }
+}
+
+TEST_CASE ("")
+{
+    auto source = (char const*) "37//37\n+2-(7*4)";
+    
+//    auto c = compiler <scanner <token>> {source};
+}
 
 #endif
