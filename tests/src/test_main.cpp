@@ -246,6 +246,7 @@ auto make_tokenizer () -> auto
         requires (c == '-')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -261,6 +262,7 @@ auto make_tokenizer () -> auto
         requires (c == '*')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -277,6 +279,7 @@ auto make_tokenizer () -> auto
         {
             sc.start = sc.current;
             sc.advance();
+            
             return
             {
                 .lexeme = Lexeme
@@ -291,6 +294,7 @@ auto make_tokenizer () -> auto
         requires (c == '/')
         {
             sc.start = sc.current;
+            sc.advance();
             
             if (sc.match ('/'))
             {
@@ -314,6 +318,7 @@ auto make_tokenizer () -> auto
         requires (c == '.')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -329,6 +334,7 @@ auto make_tokenizer () -> auto
         requires (c == ',')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -344,6 +350,7 @@ auto make_tokenizer () -> auto
         requires (c == ':')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -359,6 +366,7 @@ auto make_tokenizer () -> auto
         requires (c == ';')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -374,6 +382,7 @@ auto make_tokenizer () -> auto
         requires (c == '!')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -389,6 +398,8 @@ auto make_tokenizer () -> auto
         requires (c == '=')
         {
             sc.start = sc.current;
+            sc.advance();
+            
             
             return
             {
@@ -404,6 +415,7 @@ auto make_tokenizer () -> auto
         requires (c == '<')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -419,6 +431,7 @@ auto make_tokenizer () -> auto
         requires (c == '>')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -434,6 +447,7 @@ auto make_tokenizer () -> auto
         requires (c == '(')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -449,6 +463,7 @@ auto make_tokenizer () -> auto
         requires (c == ')')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -464,6 +479,7 @@ auto make_tokenizer () -> auto
         requires (c == '{')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -479,6 +495,7 @@ auto make_tokenizer () -> auto
         requires (c == '}')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -494,6 +511,7 @@ auto make_tokenizer () -> auto
         requires (c == '[')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -509,6 +527,7 @@ auto make_tokenizer () -> auto
         requires (c == ']')
         {
             sc.start = sc.current;
+            sc.advance();
             
             return
             {
@@ -571,6 +590,7 @@ auto make_tokenizer () -> auto
         [] <char c> (Scanner& sc) -> Token
         {
             sc.start = sc.current;
+            sc.advance();
             
             if (sc.is_at_end ())
             {
@@ -627,6 +647,9 @@ TEST_CASE("")
     };
     
     auto tok = get_token (tokenizer, sc);
+    cout << tok.lexeme << endl;
+    
+    tok = get_token (tokenizer, sc);
     cout << tok.lexeme << endl;
     
     tok = get_token (tokenizer, sc);
