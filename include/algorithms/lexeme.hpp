@@ -4,18 +4,19 @@
 
 struct lexeme
 {
-    char* begin;
-    char* end;
+//    char* begin;
+//    char* end;
+    std::string_view string;
     int line;
     
-    lexeme (auto& scanner) : begin {scanner.start}, end {scanner.current}, line {scanner.line}
-    {
-        
-    }
+//    lexeme (auto& scanner) : begin {scanner.start}, end {scanner.current}, line {scanner.line}
+//    {
+//
+//    }
 };
 
 
 inline std::ostream& operator<< (std::ostream& os, lexeme const& l)
 {
-    return os << std::string (l.begin, l.end);
+    return os << "lexeme {\"" << l.string << "\"}";
 }
