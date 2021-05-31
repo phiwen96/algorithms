@@ -149,24 +149,9 @@ TEST_CASE ("interface")
 
 //template <typename
 
-enum struct toki_type
-{
-#define X(x, ...) \
-x,
-    TOKEN
-#undef X
-};
 
 
 
-template <typename Lexeme>
-struct toki
-{
-    using lexeme_type = Lexeme;
-//    type t;
-    lexeme_type lexeme;
-    int line {0};
-};
 
 
 
@@ -204,22 +189,27 @@ template <typename Token, typename Scanner, template <typename...> typename Toke
         {s.line}                           -> same_as <int>;
 
         {s.peek ()}                        -> same_as <char>;
+        {s.peek_next ()}                   -> same_as <char>;
         {s.advance ()}                     -> same_as <char>;
         {s.is_at_end ()}                   -> same_as <bool>;
         {s.match (std::declval <char> ())} -> same_as <bool>;
-
         
         typename Token::lexeme_type;
+
+        requires requires (Token& tok)
+        {
+            {tok.type} -> same_as <int>;
+            {tok.lexeme} -> same_as <typename Token::lexeme_type>;
+            {tok.line} -> same_as <int>;
+        };
+        
+        
         
         requires requires (typename Token::lexeme_type& lex)
         {
             {lex.string}                          -> same_as <std::string_view>;
-//            {lex.begin} -> same_as <char*>;
-//            {lex.end} -> same_as <char*>;
-            {lex.line} -> same_as <int>;
         };
     }
-
 auto make_tokenizer () -> auto
 {
     using Lexeme = typename Token::lexeme_type;
@@ -229,72 +219,75 @@ auto make_tokenizer () -> auto
         [] <char c> (Scanner& sc) -> Token
         requires (c == '+')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_PLUS,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast<size_t>(sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '-')
         {
-            sc.start = sc.current;
-            sc.advance();
+            
             
             return
             {
+                .type = TOKEN_MINUS,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '*')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_STAR,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '\n' or c == ' ' or c == '\r' or c == '\t')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_WHITESPACE,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
-                }
+                },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '/')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             if (sc.match ('/'))
             {
@@ -306,246 +299,277 @@ auto make_tokenizer () -> auto
             
             return
             {
+                .type = TOKEN_SLASH,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '.')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_DOT,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == ',')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_COMMA,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == ':')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_COLON,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == ';')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_SEMICOLON,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '!')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_BANG,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '=')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             
             return
             {
+                .type = TOKEN_EQUAL,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '<')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_LESS,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '>')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_GREATER,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '(')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_LEFT_PAREN,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == ')')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_RIGHT_PAREN,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '{')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_LEFT_BRACE,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '}')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_RIGHT_BRACE,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == '[')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_LEFT_BRACKET,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c == ']')
         {
-            sc.start = sc.current;
-            sc.advance();
             
             return
             {
+                .type = TOKEN_RIGHT_BRACKET,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
+            };
+        },
+        
+        [] <char c> (Scanner& sc) -> Token
+        requires (c == '\0')
+        {
+            
+            return
+            {
+                .type = TOKEN_EOF,
+                
+                .lexeme = Lexeme
+                {
+                    .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
+                },
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         requires (c >= '0' and c <= '9')
         {
-            sc.start = sc.current;
-            
-            sc.advance();
-//            char q = sc.advance();
+
             while (isdigit (sc.peek ()))
             {
                 sc.advance();
@@ -561,36 +585,23 @@ auto make_tokenizer () -> auto
                 }
             }
             
-//            sc.start = sc.current;
+
             
             return
             {
+                .type = TOKEN_NUMBER,
+                
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
-            };
-        },
-        
-        [] <char c> (Scanner& sc) -> Token
-        requires (c == '\0')
-        {
-            std::cout << "NULL" << std::endl;
-            return
-            {
-                .lexeme = Lexeme
-                {
-                    .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
-                }
+                
+                .line = sc.line
             };
         },
         
         [] <char c> (Scanner& sc) -> Token
         {
-            sc.start = sc.current;
-            sc.advance();
             
             if (sc.is_at_end ())
             {
@@ -605,8 +616,9 @@ auto make_tokenizer () -> auto
                 .lexeme = Lexeme
                 {
                     .string = std::string_view {sc.start, static_cast <size_t> (sc.current - sc.start)},
-                    .line = sc.line
                 },
+                
+                .line = sc.line
             };
         }
     };
@@ -627,13 +639,15 @@ TEST_CASE("")
     
     
     
-    auto get_token = [] <typename... T> (overload <T...> & tokenizer, scanner& sc)
+    auto token_generator = [] <typename... T> (overload <T...> & tokenizer, scanner& sc)
     {
         switch (sc.peek ())
         {
 #define X(z, n, _) \
             case n: \
             {\
+                sc.start = sc.current; \
+                sc.advance(); \
                 constexpr char q = n; \
                 return tokenizer.template operator()<q>(sc); \
             }
@@ -646,26 +660,14 @@ TEST_CASE("")
         }
     };
     
-    auto tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
+    for (auto tok = token_generator (tokenizer, sc);
+         tok.type != TOKEN_EOF;
+         tok = token_generator (tokenizer, sc))
+    {
+        cout << tok.lexeme << endl;
+    }
     
-    tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
-    
-    tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
-    
-    tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
-    
-    tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
-    
-    tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
-    
-    tok = get_token (tokenizer, sc);
-    cout << tok.lexeme << endl;
+
 }
 
 

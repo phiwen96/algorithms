@@ -4,21 +4,25 @@
 
 /// lkml
 #define TOKEN \
-    X (TOKEN_LEFT_PAREN) \
-    X (TOKEN_RIGHT_PAREN) \
-    X (TOKEN_LEFT_BRACE) \
-    X (TOKEN_RIGHT_BRACE) \
-    X (TOKEN_COMMA) \
-    X (TOKEN_DOT) \
-    X (TOKEN_MINUS) \
-    X (TOKEN_PLUS) \
-    X (TOKEN_SEMICOLON) \
-    X (TOKEN_SLASH) \
-    X (TOKEN_STAR) \
-    X (TOKEN_BANG) \
-    X (TOKEN_BANG_EQUAL) \
-    X (TOKEN_EQUAL) \
-    X (TOKEN_EQUAL_EQUAL) \
+    X (TOKEN_COLON) \
+    X (TOKEN_WHITESPACE) \
+    X (TOKEN_LEFT_PAREN, '(') \
+    X (TOKEN_RIGHT_PAREN, ')') \
+    X (TOKEN_LEFT_BRACE, '{') \
+    X (TOKEN_RIGHT_BRACE, '}') \
+    X (TOKEN_LEFT_BRACKET, '[') \
+    X (TOKEN_RIGHT_BRACKET, ']') \
+    X (TOKEN_COMMA, ',') \
+    X (TOKEN_DOT, ',') \
+    X (TOKEN_MINUS, '-') \
+    X (TOKEN_PLUS, '+') \
+    X (TOKEN_SEMICOLON, ';') \
+    X (TOKEN_SLASH, '/') \
+    X (TOKEN_STAR, '*') \
+    X (TOKEN_BANG, '!') \
+    X (TOKEN_BANG_EQUAL, '!', '=') \
+    X (TOKEN_EQUAL, '=') \
+    X (TOKEN_EQUAL_EQUAL, '=', '=') \
     X (TOKEN_GREATER) \
     X (TOKEN_GREATER_EQUAL) \
     X (TOKEN_LESS) \
@@ -102,6 +106,26 @@ tok,
     
     type t;
     lexeme lex;
+    int line {0};
+};
+
+
+enum
+{
+#define X(x, ...) \
+x,
+    TOKEN
+#undef X
+};
+
+template <typename Lexeme>
+struct toki
+{
+    using lexeme_type = Lexeme;
+    
+    
+    int type;
+    lexeme_type lexeme;
     int line {0};
 };
 

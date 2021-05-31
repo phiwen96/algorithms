@@ -7,7 +7,7 @@ struct lexeme
 //    char* begin;
 //    char* end;
     std::string_view string;
-    int line;
+
     
 //    lexeme (auto& scanner) : begin {scanner.start}, end {scanner.current}, line {scanner.line}
 //    {
