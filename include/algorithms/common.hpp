@@ -147,3 +147,19 @@ template <typename A, typename B>
 concept same_as = requires (){
     requires std::is_same_v <A, B>;
 };
+
+
+template <typename A, typename B>
+concept convertible_to = requires (){
+    requires std::is_convertible_v <A, B>;
+};
+
+
+
+
+
+template <class T, class U>
+concept Derived = std::is_base_of<U, T>::value;
+
+
+#define declval(x) std::declval <x> ()

@@ -15,6 +15,10 @@ if (NOT TARGET ph_color)
 	add_subdirectory (dependencies/ph_color)
 endif ()
 
+if (NOT TARGET ph_concepts)
+	add_subdirectory (dependencies/ph_concepts)
+endif ()
+
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	

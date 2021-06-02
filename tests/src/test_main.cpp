@@ -10,6 +10,143 @@
 #include <algorithms/token.hpp>
 #include <algorithms/lexeme.hpp>
 #include <algorithms/scanner.hpp>
+#include <algorithms/operator.hpp>
+
+
+
+
+
+template <typename T>
+concept Int = std::is_same_v <T, int>;
+template <typename T>
+concept Char = std::is_same_v <T, char>;
+
+//template <typename T>
+//requires requires () {
+//
+//}
+
+
+//template <template <typename> typename>
+//concept boooo = true;
+
+template <auto>
+concept boooo = true;
+
+template <auto>
+concept boo =
+    true;
+
+//template <template <typename...> typename T, typename... U>
+//concept noo = boo <T>;
+
+template <typename A, typename B>
+concept teeeee =
+    not same_as <A, B>;
+
+
+//template <typename b>
+//requires requires (b&) {
+//    requires (true);
+//}
+
+auto re ()
+{
+    return requires {1;};
+}
+
+
+
+template <typename>
+concept Not = false;//requires (b&){requires (true);};
+
+//template <Char i>
+//concept Te = true;
+
+template <typename...>
+struct Test;
+
+template <Int i>
+struct Test <i> {
+    
+};
+
+
+
+//template <typename T>
+//struct Test <boo<Int<T>>>
+//{
+//
+//};
+
+template <typename T>
+concept Float = true;//std::is_same_v <T, float>;
+template <Not>
+struct TTest
+{
+    
+};
+//template <typename T>
+//requires (not Int <T>)
+//struct Test <T>
+//{
+//
+//};
+
+
+
+
+
+template <typename T>
+concept ja = true;
+
+
+constexpr bool _ = requires ( int i) {
+  ++i; // stop compilatopn if not satisfied
+};
+
+
+TEST_CASE ("new")
+{
+    using namespace std;
+//    Test <char> t0;
+    Test <int> t;
+    
+    Bajs b;
+    for (auto a : b) {}
+    
+//    cout <<  Int <int>::value << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <typename>
+struct bajs;
+
+template <>
+struct bajs <int>
+{
+    
+};
+
+template <typename T>
+concept Optional = requires {
+  typename T::value_type;
+  // ...
+};
 
 
 
@@ -552,7 +689,6 @@ auto make_tokenizer () -> auto
         [] <char c> (Scanner& sc) -> Token
         requires (c == '\0')
         {
-            
             return
             {
                 .type = TOKEN_EOF,
@@ -627,8 +763,13 @@ auto make_tokenizer () -> auto
 
 
 
-TEST_CASE("")
+
+
+
+
+TEST_CASE("compiler")
 {
+    return;
     using namespace std;
 
     auto tokenizer = make_tokenizer <toki <lexeme>, scanner, overload> ();
