@@ -46,7 +46,7 @@ struct vm
                     ++ip;
                     break;
                 }
-                    
+                
                 case opcode::OP_ADD:
                 {
                     push (pop () + pop ());

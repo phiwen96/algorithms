@@ -14,8 +14,9 @@ BOOST_PP_EAT ({
         char* start;
         char* current;
         int line;
+        int const length;
         
-        scanner (char const* source) : start {(char*) source}, current {(char*) source}, line {1}
+        scanner (char const* source) : start {(char*) source}, current {(char*) source}, line {1}, length {strlen (source)}
         {
             
         }
@@ -296,8 +297,10 @@ struct scanner
     char* start;
     char* current;
     int line;
+    int const length;
     
-    scanner (char const* source) : start {(char*) source}, current {(char*) source}, line {1}
+    
+    scanner (char const* source) : start {(char*) source}, current {(char*) source}, line {1}, length (strlen (source))
     {
         
     }
@@ -575,7 +578,8 @@ struct scanner
     
     auto is_at_end () const -> bool
     {
-        return *current == '\0';
+        return (current - start) >= length;
+//        return *current == '\0';
     }
     
 //    auto make_token (typename token_type::type t) -> token_type
