@@ -769,7 +769,7 @@ auto make_tokenizer () -> auto
 
 TEST_CASE("compiler")
 {
-    return;
+//    return;
     using namespace std;
 
     auto tokenizer = make_tokenizer <toki <lexeme>, scanner, overload> ();

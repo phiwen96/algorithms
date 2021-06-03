@@ -14,7 +14,7 @@ struct TestOperator
 };
 
 
-static_assert (requires {requires Operator <TestOperator>;}, "");
+//static_assert (requires {requires Operator <TestOperator>;}, "");
 
 
 

@@ -89,13 +89,7 @@ concept Lexer = requires () {
      */1;
 };
 
-template <typename...>
-concept Parser = requires () {
-    /**
-     Parser: Check that the syntax of the sentences are correct.
-*/
-    1;
-};
+
 
 template <typename...>
 concept Semantic_analysis = requires () {
@@ -144,17 +138,7 @@ concept Semantic_representation = requires () {
     1;
 };
 
-template <typename T>
-concept String = requires (T& str) {
-    requires requires ()
-    {
-        {str [declval (int)]} -> same_as <char>;
-        {str.size ()} -> convertible_to <char>;
-        
-    } or requires () {
-        true;
-    };
-};
+
 
 struct Bajs
 {
@@ -169,41 +153,51 @@ cexp bool __ = requires (Bajs& b) {
     true;
 };
 
+
+
+
+
+
+//template <typename compiler>
+//concept Compiler1 =
+//    Lexer <typename compiler::lexer> and
+//    Parser <typename compiler::parser> and
+//    Semantic_analysis <typename compiler::semantic_analysis> and
+//    Optimizer <typename compiler::optimizer> and
+//    Code_generator <typename compiler::code_generator> and
+//    Front_end <typename compiler::front_end> and
+//    Back_end <typename compiler::back_end> and
+//    Impl_language <typename compiler::impl_language> and
+//    Semantic_representation <typename compiler::semantic_representation>;
+
+
+
+
+#define input source_code
+#define output tokens
 template <typename T>
-#define string_type decltype (T::value)
-concept Scanner = requires (string_type& v)
+concept Scanner = requires (T& t)
 {
+    requires String <typename T::input>;
+    typename T::output;
     
-//    requires requires (string_type& v, size_t i)
-//    {
-//        requires requires ()
-//        {
-//            {v[i]} -> same_as <char>;
-//        };
-//        requires requires ()
-//        {
-//            {v[i]} -> same_as <char>;
-//        };
-//    };
-    true;
+    
 };
+#undef input
+#undef output
 
 
 
-
-template <typename compiler>
-concept Compiler =
-    Lexer <typename compiler::lexer> and
-    Parser <typename compiler::parser> and
-    Semantic_analysis <typename compiler::semantic_analysis> and
-    Optimizer <typename compiler::optimizer> and
-    Code_generator <typename compiler::code_generator> and
-    Front_end <typename compiler::front_end> and
-    Back_end <typename compiler::back_end> and
-    Impl_language <typename compiler::impl_language> and
-    Semantic_representation <typename compiler::semantic_representation>;
-
-
+#define input tokens
+#define output syntax_tree
+template <typename T>
+concept Parser = requires (T& t)
+{
+    typename T::input;
+    typename T::output;
+};
+#undef input
+#undef output
 
 
 

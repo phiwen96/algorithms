@@ -140,19 +140,7 @@ analyzer (T) -> analyzer <T>;
 
 
 
-template <char c>
-concept is_digit = requires {requires (c >= '0' and c <= '9');};
 
-template <typename A, typename B>
-concept same_as = requires (){
-    requires std::is_same_v <A, B>;
-};
-
-
-template <typename A, typename B>
-concept convertible_to = requires (){
-    requires std::is_convertible_v <A, B>;
-};
 
 
 
